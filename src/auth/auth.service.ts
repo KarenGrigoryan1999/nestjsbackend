@@ -212,7 +212,7 @@ export class AuthService {
         userDto.password,
         user?.password
       );
-      if (!passwordEquals) {
+      if (passwordEquals) {
         return user;
       }
     }
