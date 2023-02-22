@@ -11,10 +11,10 @@ async function start() {
     app = await NestFactory.create(AppModule, {
       httpsOptions: {
         key: fs.readFileSync(
-          "../../../etc/letsencrypt/live/badteacher-tech.ru/privkey.pem"
+          "./certs/priv.pem"
         ),
         cert: fs.readFileSync(
-          "../../../etc/letsencrypt/live/badteacher-tech.ru/cert.pem"
+          "./certs/cert.pem"
         ),
       },
     });
