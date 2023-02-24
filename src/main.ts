@@ -7,6 +7,8 @@ import { ValidationPipe } from "./pipes/validation.pipe";
 import * as fs from "fs";
 import { ExpressAdapter } from "@nestjs/platform-express";
 
+const cors = require('cors');
+
 async function start() {
   const PORT = process.env.PORT || 5000;
 
@@ -21,6 +23,8 @@ async function start() {
 
   const server = express();
 
+  server.use(cors());
+
   const app = await NestFactory.create(
     AppModule,
     new ExpressAdapter(server),
@@ -31,10 +35,8 @@ async function start() {
 
   app.useGlobalPipes(new ValidationPipe());
 
-  
   http.createServer(server).listen(7071);
-
-  app.listen(PORT);
+  https.createServer(httpsOptions, server).listen(PORT);
 }
 
 start();
