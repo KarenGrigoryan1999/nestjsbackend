@@ -31,8 +31,10 @@ async function start() {
 
   app.useGlobalPipes(new ValidationPipe());
 
+  
   http.createServer(server).listen(7071);
-  https.createServer(httpsOptions, server).listen(PORT);
+
+  app.listen(PORT);
 }
 
 start();
