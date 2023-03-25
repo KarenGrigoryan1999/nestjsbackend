@@ -1,5 +1,7 @@
-import {Column, DataType, DefaultScope, ForeignKey, Model, Scopes, Table} from "sequelize-typescript";
+import { QuestionPhotos } from './../files/types/question-photos.model';
+import {BelongsToMany, Column, DataType, ForeignKey, Model, Table} from "sequelize-typescript";
 import {Lesson} from "src/lessons/lessons.model";
+import { File } from "../files/files.model";
 
 interface QuestionCreationAttrs {
     question: string;
@@ -8,6 +10,7 @@ interface QuestionCreationAttrs {
     answer_3: string;
     answer_4: string;
     correct_answer: string;
+    cost: string;
     type: string;
     position: number;
 }
@@ -44,7 +47,13 @@ export class Question extends Model<Question, QuestionCreationAttrs> {
     correct_answer: string;
 
     @Column({type: DataType.INTEGER, defaultValue: 1})
+    cost: number;
+
+    @Column({type: DataType.INTEGER, defaultValue: 1})
     position: number;
+
+    @BelongsToMany(() => File, () => QuestionPhotos)
+    photos: File[];
 
     @ForeignKey(() => Lesson)
     lesson: Lesson;

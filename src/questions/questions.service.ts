@@ -11,11 +11,17 @@ export class QuestionsService {
     async createQuestion(dto: CreateQuestionDto) {
         const question = await this.questionsRepository.create(dto);
 
+        await question.$set("photos", dto.photos);
+
         return question;
     }
         
     async editQuestion(dto: EditQuestionDto) {
-        const question = await this.questionsRepository.update(dto, { where: { id: dto.id }});
+        const question = await this.questionsRepository.findByPk(dto.id);
+
+        await this.questionsRepository.update(dto, { where: { id: dto.id }});
+
+        await question.$set("photos", dto.photos);
 
         return {
             success: true

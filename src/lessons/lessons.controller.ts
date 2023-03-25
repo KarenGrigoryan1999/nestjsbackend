@@ -18,10 +18,29 @@ export class LessonsController {
   updateLesson(@Body() dto: UpdateLessonDto) {
     return this.lessonsService.updateLesson(dto);
   }
+
+  @Roles("ADMIN", "STUDENT")
+  @UseGuards(RolesGuard)
+  @Put("/:id")
+  markAsPassed(@Request() req, @Param('id') id: string) {
+    return this.lessonsService.markAsPassed(id, req.user.id);
+  }
   
   @Get()
   getLessons() {
     return this.lessonsService.getAll();
+  }
+
+  @Get('/course/:id')
+  getLessonCourseId(@Param('id') id: string) {
+    return this.lessonsService.getLessonCourseId(id);
+  }
+
+  @Roles("ADMIN", "STUDENT")
+  @UseGuards(RolesGuard)
+  @Get('/passed')
+  getPassedLessons(@Request() req) {
+    return this.lessonsService.getPassedLessons(req.user.id);
   }
   
   @Roles("ADMIN", "STUDENT")
@@ -31,6 +50,8 @@ export class LessonsController {
     return this.lessonsService.getOne(id, req.user);
   }
 
+  @Roles("ADMIN")
+  @UseGuards(RolesGuard)
   @Delete("/:id")
   deleteLesson(@Param('id') id: string) {
     return this.lessonsService.deleteLesson(id);

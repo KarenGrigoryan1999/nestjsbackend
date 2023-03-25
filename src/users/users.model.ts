@@ -1,3 +1,4 @@
+import { LessonsUsers } from './../lessons/lessons-users.model';
 import { ExternalAuth } from './../external-auth/external-auth.model';
 import {
   BelongsToMany,
@@ -15,6 +16,7 @@ import { UserRoles } from "src/roles/user-roles.model";
 import { UserCourses } from "./user-courses.model";
 import { File } from "../files/files.model";
 import { UserAvatars } from "src/files/types/user-avatars.model";
+import { Lesson } from 'src/lessons/lessons.model';
 
 interface UserCreationAttrs {
   email: string;
@@ -72,6 +74,9 @@ export class User extends Model<User, UserCreationAttrs> {
 
   @BelongsToMany(() => Course, () => UserCourses)
   courses: Course[];
+
+  @BelongsToMany(() => Lesson, () => LessonsUsers)
+  lessons: Lesson[];
 
   @ForeignKey(() => ExternalAuth)
   @Column({ type: DataType.INTEGER, allowNull: true })

@@ -11,6 +11,7 @@ import { CoursesPhotos } from "./types/courses-photos.model";
 import { LessonsVideos } from "./types/lessons-videos.model";
 import { TeacherVideoPreview } from "./types/teacher-video-preview.model";
 import { UserAvatars } from "./types/user-avatars.model";
+import { QuestionPhotos } from './types/question-photos.model';
 
 @Module({
   controllers: [FilesController],
@@ -20,6 +21,7 @@ import { UserAvatars } from "./types/user-avatars.model";
     SequelizeModule.forFeature([
       File,
       TeacherPhotos,
+      QuestionPhotos,
       TeacherVideos,
       CoursesFiles,
       CoursesPhotos,

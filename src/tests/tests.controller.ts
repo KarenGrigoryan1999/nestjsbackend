@@ -5,10 +5,12 @@ import {
   Param,
   Post,
   Put,
+  Request,
   UseGuards,
 } from "@nestjs/common";
 import { Roles } from "src/auth/roles-auth.decorator";
 import { RolesGuard } from "src/auth/roles.guard";
+import { CompleteTestDto } from "./dto/complete-test.dto";
 import { CreateTestDto } from "./dto/create-test.dto";
 import { UpdateTestDto } from "./dto/update-test.dto";
 import { TestsService } from "./tests.service";
@@ -24,7 +26,7 @@ export class TestsController {
     return this.testsService.getAll();
   }
 
-  @Roles("ADMIN")
+  @Roles("ADMIN", "STUDENT")
   @UseGuards(RolesGuard)
   @Get("/:id")
   getTest(@Param("id") id: string) {
@@ -36,6 +38,13 @@ export class TestsController {
   @Post()
   createTest(@Body() test: CreateTestDto) {
     return this.testsService.createTest(test);
+  }
+
+  @Roles("ADMIN", "STUDENT")
+  @UseGuards(RolesGuard)
+  @Put("/save-result")
+  completeTest(@Request() req, @Body() dto: CompleteTestDto) {
+    return this.testsService.completeTest(dto, req.user.id);
   }
 
   @Roles("ADMIN")

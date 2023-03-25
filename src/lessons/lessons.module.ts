@@ -8,10 +8,12 @@ import { Course } from 'src/courses/courses.model';
 import {UserCourses} from "../users/user-courses.model";
 import {CoursesLessons} from "../courses/courses-lessons.model";
 import {CompletedLesson} from "../completed-lessons/completed-lessons.model";
+import { LessonsUsers } from './lessons-users.model';
+import { User } from 'src/users/users.model';
 
 @Module({
   controllers: [LessonsController],
   providers: [LessonsService],
-  imports: [AuthModule, SequelizeModule.forFeature([Lesson, Course, UserCourses, CoursesLessons, CompletedLesson])],
+  imports: [AuthModule, SequelizeModule.forFeature([Lesson, Course, UserCourses, CoursesLessons, CompletedLesson, User])],
 })
 export class LessonsModule {}

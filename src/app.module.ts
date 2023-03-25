@@ -49,6 +49,16 @@ import {CompletedLessonsModule} from "./completed-lessons/completed-lessons.modu
 import { MainPageFieldsModule } from './main-page-fields/main-page-fields.module';
 import { MainPageFields } from "./main-page-fields/main-page-fields.model";
 import { ExternalAuthModule } from './external-auth/external-auth.module';
+import { LessonsUsers } from './lessons/lessons-users.model';
+import { QuestionPhotos } from './files/types/question-photos.model';
+import { ResultsModule } from './results/results.module';
+import { Result } from './results/results.model';
+import { UserResults } from './results/user-results.model';
+import { LearnStagesModule } from './learn-stages/learn-stages.module';
+import { LearnStagesPhotos } from './learn-stages/learn-stages-photos.dto';
+import { PromoModule } from './promo/promo.module';
+import { Promo } from './promo/promo.model';
+import { StatisticModule } from './statistic/statistic.module';
 
 @Module({
     imports: [
@@ -79,12 +89,15 @@ import { ExternalAuthModule } from './external-auth/external-auth.module';
                 TeacherCourses,
                 File,
                 TeacherPhotos,
+                QuestionPhotos,
                 TeacherVideos,
                 TeacherVideoPreview,
                 CoursesFiles,
                 CoursesPhotos,
                 Lesson,
                 LessonsVideos,
+                LearnStagesPhotos,
+                LessonsUsers,
                 CoursesLessons,
                 CoursesTests,
                 Question,
@@ -97,6 +110,9 @@ import { ExternalAuthModule } from './external-auth/external-auth.module';
                 Cart,
                 CompletedLesson,
                 MainPageFields,
+                Result,
+                Promo,
+                UserResults,
                 ExternalAuth,
             ],
             autoLoadModels: true,
@@ -141,6 +157,10 @@ import { ExternalAuthModule } from './external-auth/external-auth.module';
         CompletedLessonsModule,
         MainPageFieldsModule,
         ExternalAuthModule,
+        ResultsModule,
+        LearnStagesModule,
+        PromoModule,
+        StatisticModule,
     ],
 })
 export class AppModule {

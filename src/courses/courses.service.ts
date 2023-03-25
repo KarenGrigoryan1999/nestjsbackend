@@ -1,15 +1,24 @@
+import { UserCourses } from './../users/user-courses.model';
+import { LearnStages } from './../learn-stages/learn-stages.model';
 import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
 import { InjectModel } from "@nestjs/sequelize";
+import { LessonsUsers } from './../lessons/lessons-users.model';
 import { Course } from "./courses.model";
 import { CreateCourseDto } from "./dto/create-course.dto";
 import { EditCourseDto } from "./dto/edit-course.dto";
 import { FilesService } from "../files/files.service";
 import { Teacher } from "src/teachers/teachers.model";
+import { Lesson } from "src/lessons/lessons.model";
+import { CoursesLessons } from "./courses-lessons.model";
+import { User } from "src/users/users.model";
+import { Result } from "src/results/results.model";
 
 @Injectable()
 export class CoursesService {
   constructor(
     @InjectModel(Course) private coursesRepository: typeof Course,
+    @InjectModel(Result) private resultsRepository: typeof Result,
+    @InjectModel(Lesson) private lessonsRepository: typeof Lesson,
     private fileService: FilesService
   ) {}
 
@@ -31,14 +40,52 @@ export class CoursesService {
     });
   }
 
-  async getCourse(id) {
+  async getCourse(id): Promise<any> {
     const course = await this.coursesRepository.findByPk(id, {
       include: { all: true, nested: true },
     });
 
-    await course.lessons.sort((a, b) => a.position - b.position);
+    if(course){
+      course.lessons.sort((a, b) => a.position - b.position);
+      return course;
+    }
 
-    return course;
+    throw new HttpException('', HttpStatus.NOT_FOUND);
+  }
+
+  async getUserCourseInfo(id, userId): Promise<any> {
+    const course = await this.getCourse(id);
+
+    const finishedLessons = await this.coursesRepository.findByPk(id, {
+      include: [
+        {
+          model: Lesson,
+          include: [
+            {
+              model: User,
+              required: true,
+              where: {
+                id: userId
+              }
+            }
+          ],
+        }
+      ]
+    });
+
+    const results = await this.resultsRepository.findAll({
+      include: [{
+        model: User,
+        where: {
+          id: userId
+        }
+      },
+      ]
+    });
+
+    const filteredResults = results.reduce((res, element) => [...res, course.tests.reduce((acc, testElement) => testElement.id === element.testId ? true : acc, false) ? element : undefined], []).filter(element => element !== undefined);
+
+    return {...course.get({plain: true}), results: filteredResults, finishedLessons: finishedLessons.lessons.map((element: Lesson) => element.id)};
   }
 
   async createCourse(dto: CreateCourseDto) {

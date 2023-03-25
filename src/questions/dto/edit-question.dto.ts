@@ -15,6 +15,8 @@ export class EditQuestionDto {
   readonly answer_3;
   readonly answer_4;
 
+  readonly photos: any[];
+
   @IsString({ message: "Введите верный ответ" })
   readonly correct_answer;
 

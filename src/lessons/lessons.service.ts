@@ -1,3 +1,4 @@
+import { LessonsUsers } from './lessons-users.model';
 import {HttpException, HttpStatus, Injectable} from "@nestjs/common";
 import {InjectModel} from "@nestjs/sequelize";
 import {Course} from "src/courses/courses.model";
@@ -9,6 +10,7 @@ import {CoursesLessons} from "../courses/courses-lessons.model";
 import {Question} from "../questions/question.model";
 import {File} from "../files/files.model";
 import {CompletedLesson} from "../completed-lessons/completed-lessons.model";
+import { User } from 'src/users/users.model';
 
 @Injectable()
 export class LessonsService {
@@ -16,6 +18,7 @@ export class LessonsService {
         @InjectModel(Lesson) private lessonsRepository: typeof Lesson,
         @InjectModel(Course) private courseRepository: typeof Course,
         @InjectModel(UserCourses) private userCoursesRepository: typeof UserCourses,
+        @InjectModel(User) private userRepository: typeof User,
         @InjectModel(CoursesLessons) private coursesLessonsRepository: typeof CoursesLessons,
         @InjectModel(CompletedLesson) private completedLessonsRepository: typeof CompletedLesson
     ) {
@@ -47,21 +50,60 @@ export class LessonsService {
         throw new HttpException("Не удалось создать урок", HttpStatus.FORBIDDEN);
     }
 
+    async markAsPassed(id: string, userId: string) {
+        const lesson = await this.lessonsRepository.findByPk(id, {
+            include: [Course]
+        });
+        lesson.$set("user", userId);
+        const courseLessons = await this.courseRepository.findByPk(lesson.courses[0].id, {
+            include: [{
+                model: Lesson,
+                where: {
+                    position: 2,
+                }
+            }],
+        });
+
+        if(courseLessons.lessons.length === 0) {
+            return {
+                message: 'Course was completed'
+            }
+        } else {
+            return {
+                nextLesson: courseLessons.lessons[0].id
+            }
+        }
+    }
+
     async getAll() {
         return await this.lessonsRepository.findAll({include: {all: true}});
+    }
+
+    async getLessonCourseId(id: string) {
+        const lesson = await this.lessonsRepository.findByPk(id, {
+            include: [Course]
+        });
+
+        if(lesson) {
+            return {
+                courseId: lesson.courses[0].id,
+            }
+        }
+
+        throw new HttpException("Lesson was not found", HttpStatus.NOT_FOUND);
     }
 
     async getOne(id: string, user: any) {
         const isAdmin = user.roles.find(r => r.value === "ADMIN");
         const userId = user.id;
         let accessDenied = true; // По умолчанию доступ к уроку закрыт
-        let exclude = ["correct_answer"];
-
+        let exclude = [];
+        
         // Если админ, то убираем скрытие верного ответа
         if (isAdmin) {
             exclude = [];
         }
-
+        
         // Ищем урок
         const lesson = await this.lessonsRepository.findByPk(id, {
             include: [{
@@ -74,7 +116,7 @@ export class LessonsService {
                     model: File
                 }]
         });
-
+        
         // Если урок не найден, прекращаем работу
         if (!lesson?.id) {
             throw new HttpException("Такой урок не найден", HttpStatus.NOT_FOUND);
@@ -107,7 +149,7 @@ export class LessonsService {
 
         // Если курс не был куплен - прекращаем работу
         if (!userCourse?.id) {
-            throw new HttpException("Вы не покупали данный курс", HttpStatus.NOT_FOUND);
+            throw new HttpException("Вы не покупали данный курс", HttpStatus.FORBIDDEN);
         }
 
         // Если курс взят как пробный - то открываем доступ только для первого урока
@@ -117,44 +159,49 @@ export class LessonsService {
 
         // Если курс куплен, смотрим уже пройденные уроки
         if (userCourse.pay) {
-            const completedLessons = await this.completedLessonsRepository.findAll({
-                where: {
-                    courseId: course.courseId
-                }
+            const test = await this.userRepository.findByPk( user.id,{
+                include: [Lesson]
             });
 
             if (lesson.position > 1) {
                 // Ищем id предыдущего урока
-                const prevLessons = await this.lessonsRepository.findAll({
-                    where: {
-                        position: lesson.position - 1
-                    }
-                });
                 const allCourseLessons = await this.coursesLessonsRepository.findAll({
                     where: {
-                        courseId: course.courseId
-                    }
+                        courseId: course.courseId,
+                    },
                 });
+                let pastLessonIsPassed = false;
+                for(let pLesson of test.lessons) {
+                    pastLessonIsPassed = !!allCourseLessons.find((courseLessonElement: CoursesLessons) => courseLessonElement.lessonId === pLesson.id);
+                    if(pastLessonIsPassed) break;
+                }
 
-                prevLessons.forEach(pLesson => {
-                    const some = allCourseLessons.find(l => l.lessonId === pLesson.id);
-                    console.log(some?.id)
-                    if (some?.id) {
-                        return lesson;
-                    }
-                });
-
-                throw new HttpException("Вы не прошли предыдущий урок", HttpStatus.NOT_FOUND);
+                if(!pastLessonIsPassed) throw new HttpException("Вы не прошли предыдущий урок", HttpStatus.FORBIDDEN);
             }
 
             console.log('first payed lesson');
             return lesson;
         }
 
-        throw new HttpException("Нет доступа", HttpStatus.NOT_FOUND);
+        throw new HttpException("Нет доступа", HttpStatus.PAYMENT_REQUIRED);
     }
 
     async deleteLesson(id: string) {
         return await this.lessonsRepository.destroy({where: {id}});
+    }
+
+    async getPassedLessons(userId) {
+        const lessons = await this.lessonsRepository.findAll({
+            include: [{
+                model: User,
+                where: {
+                    id: userId
+                }
+            },{
+                model: Course
+            }],
+        });
+
+        return lessons;
     }
 }
