@@ -11,7 +11,8 @@ import { User } from 'src/users/users.model';
 export class TestsService {
   constructor(
     @InjectModel(Test) private testsRepository: typeof Test,
-    @InjectModel(Result) private resultsRepository: typeof Result
+    @InjectModel(Result) private resultsRepository: typeof Result,
+    @InjectModel(User) private userRepository: typeof User
   ) {}
 
   async getAll() {
@@ -23,7 +24,6 @@ export class TestsService {
   }
 
   async completeTest(dto: CompleteTestDto, userId: number) {
-    console.log(dto.testId);
     const result = await this.resultsRepository.findOne({
       where: {
         testId: dto.testId
@@ -36,23 +36,26 @@ export class TestsService {
       }]
     });
 
-    if(result) {
-      await result.update({
-        result: dto.result
-      });
-    } else {
+    if(!result) {
       const newResult = await this.resultsRepository.create({
         result: dto.result,
         testId: dto.testId
       });
 
+      const user = await this.userRepository.findByPk(userId);
+      await this.userRepository.update({
+        balance: user.balance + dto.result,
+      }, {
+        where: {
+          id: userId
+        }
+      });
+
       newResult.$set("users", [userId]);
-      console.log('new', newResult);
 
       return newResult;
     }
 
-    console.log('update', result);
     return result;
   }
 

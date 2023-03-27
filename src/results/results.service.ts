@@ -5,20 +5,16 @@ import { Result } from './results.model';
 
 @Injectable()
 export class ResultsService {
-    constructor(@InjectModel(Result) private resultRepository: typeof Result) {}
+    constructor(
+        @InjectModel(Result) private resultRepository: typeof Result,
+        @InjectModel(User) private userRepository: typeof User
+    ) {}
 
     async getScore(id: string) {
-        const results = await this.resultRepository.findAll({
-            include: [
-                {
-                    model: User,
-                    where: {
-                        id
-                    }
-                }
-            ]
-        });
+        const user = await this.userRepository.findByPk(id);
 
-        return results.reduce((res, resultElement: Result) => resultElement.result + res, 0);
+        return {
+            balance: user.balance
+        };
     }
 }

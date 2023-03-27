@@ -59,6 +59,9 @@ import { LearnStagesPhotos } from './learn-stages/learn-stages-photos.dto';
 import { PromoModule } from './promo/promo.module';
 import { Promo } from './promo/promo.model';
 import { StatisticModule } from './statistic/statistic.module';
+import { GiftsModule } from './gifts/gifts.module';
+import { Gifts } from './gifts/gifts.model';
+import { ShopGifts } from './gifts/shop-gifts.model';
 
 @Module({
     imports: [
@@ -103,11 +106,13 @@ import { StatisticModule } from './statistic/statistic.module';
                 Question,
                 Test,
                 TestsQuestions,
+                ShopGifts,
                 XFields,
                 Shop,
                 ShopImages,
                 UserAvatars,
                 Cart,
+                Gifts,
                 CompletedLesson,
                 MainPageFields,
                 Result,
@@ -161,6 +166,7 @@ import { StatisticModule } from './statistic/statistic.module';
         LearnStagesModule,
         PromoModule,
         StatisticModule,
+        GiftsModule,
     ],
 })
 export class AppModule {
