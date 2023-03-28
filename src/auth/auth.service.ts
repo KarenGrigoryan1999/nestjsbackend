@@ -129,7 +129,7 @@ export class AuthService {
       ...userDto,
       password: hashPassword,
     }, activationCode);
-    this.sendConfirmEmail(user);
+    //this.sendConfirmEmail(user);
     return this.generateToken(user);
   }
 
