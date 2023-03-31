@@ -4,7 +4,7 @@ import {UsersService} from "./users.service";
 import {RolesGuard} from "../auth/roles.guard";
 import {UpdateUserDto} from "./dto/update-user.dto";
 
-@Controller("users")
+@Controller("api/users")
 export class UsersController {
     constructor(private userService: UsersService) {
     }

@@ -21,7 +21,7 @@ import { JwtAuthGuard } from "./jwt-auth.guard";
 export class AuthController {
   constructor(private authService: AuthService) {}
 
-  @Post("/login")
+  @Post("api/login")
   login(@Body() userDto: LoginUserDto) {
     return this.authService.login(userDto);
   }

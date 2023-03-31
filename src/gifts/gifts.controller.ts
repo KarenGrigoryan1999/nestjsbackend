@@ -4,7 +4,7 @@ import { Roles } from 'src/auth/roles-auth.decorator';
 import { RolesGuard } from 'src/auth/roles.guard';
 import { GiftRequestDto } from './dto/gift-request.dto';
 
-@Controller('gifts')
+@Controller('api/gifts')
 export class GiftsController {
     constructor(private giftsService: GiftsService) {}
 

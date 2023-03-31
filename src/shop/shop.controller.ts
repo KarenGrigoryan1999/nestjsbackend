@@ -14,7 +14,7 @@ import { CreateProductDto } from "./dto/create-product.dto";
 import { UpdateProductDto } from "./dto/update-product.dto";
 import { ShopService } from "./shop.service";
 
-@Controller("shop")
+@Controller("api/shop")
 export class ShopController {
   constructor(private shopService: ShopService) {}
 

@@ -20,7 +20,7 @@ import {CoursesService} from "./courses.service";
 import {CreateCourseDto} from "./dto/create-course.dto";
 import {EditCourseDto} from "./dto/edit-course.dto";
 
-@Controller('courses')
+@Controller('api/courses')
 export class CoursesController {
     constructor(private coursesService: CoursesService) {}
     

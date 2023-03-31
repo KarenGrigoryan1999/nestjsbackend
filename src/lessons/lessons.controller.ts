@@ -5,7 +5,7 @@ import { LessonsService } from "./lessons.service";
 import {Roles} from "../auth/roles-auth.decorator";
 import {RolesGuard} from "../auth/roles.guard";
 
-@Controller("lessons")
+@Controller("api/lessons")
 export class LessonsController {
   constructor(private lessonsService: LessonsService) {}
 

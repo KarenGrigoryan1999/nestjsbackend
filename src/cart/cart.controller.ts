@@ -3,7 +3,7 @@ import {Roles} from "../auth/roles-auth.decorator";
 import {RolesGuard} from "../auth/roles.guard";
 import {CartService} from "./cart.service";
 
-@Controller('cart')
+@Controller('api/cart')
 export class CartController {
     constructor(private cartService: CartService) {
     }

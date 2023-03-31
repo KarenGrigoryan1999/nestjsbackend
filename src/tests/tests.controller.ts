@@ -15,7 +15,7 @@ import { CreateTestDto } from "./dto/create-test.dto";
 import { UpdateTestDto } from "./dto/update-test.dto";
 import { TestsService } from "./tests.service";
 
-@Controller("tests")
+@Controller("api/tests")
 export class TestsController {
   constructor(private testsService: TestsService) {}
 

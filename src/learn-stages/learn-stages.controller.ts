@@ -4,7 +4,7 @@ import { RolesGuard } from 'src/auth/roles.guard';
 import { LearnStagesDto } from './dto/learn-stages.dto';
 import { LearnStagesService } from './learn-stages.service';
 
-@Controller('learn-stages')
+@Controller('api/learn-stages')
 export class LearnStagesController {
     constructor(private learnStagesService: LearnStagesService) {}
     

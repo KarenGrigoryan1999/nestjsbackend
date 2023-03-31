@@ -4,7 +4,7 @@ import { Body, Controller, Get, Put, UseGuards } from "@nestjs/common";
 import { XFieldsService } from "./xfields.service";
 import { UpdateXFieldDto } from "./dto/update-xfield.dto";
 
-@Controller("xfields")
+@Controller("api/xfields")
 export class XFieldsController {
   constructor(private XFieldsService: XFieldsService) {}
 

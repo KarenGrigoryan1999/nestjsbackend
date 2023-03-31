@@ -3,7 +3,7 @@ import { Controller, Get, UseGuards, Request } from '@nestjs/common';
 import { Roles } from 'src/auth/roles-auth.decorator';
 import { RolesGuard } from 'src/auth/roles.guard';
 
-@Controller('results')
+@Controller('api/results')
 export class ResultsController {
     constructor(private resultService: ResultsService) {}
 

@@ -4,7 +4,7 @@ import {CreateRoleDto} from "./dto/create-role.dto";
 import { Roles } from 'src/auth/roles-auth.decorator';
 import {RolesGuard} from "../auth/roles.guard";
 
-@Controller('roles')
+@Controller('api/roles')
 export class RolesController {
     constructor(private rolesService: RolesService) {}
 

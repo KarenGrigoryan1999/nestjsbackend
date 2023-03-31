@@ -14,7 +14,7 @@ import {
 } from "@nestjs/common";
 import { FilesService } from "./files.service";
 
-@Controller("files")
+@Controller("api/files")
 export class FilesController {
   constructor(private filesService: FilesService) {}
 
