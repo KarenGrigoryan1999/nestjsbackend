@@ -4,7 +4,7 @@ import { MainPageFieldsDto } from './dto/main-page-fields.dto';
 import { Roles } from 'src/auth/roles-auth.decorator';
 import { RolesGuard } from 'src/auth/roles.guard';
 
-@Controller('main-page-fields')
+@Controller('api/main-page-fields')
 export class MainPageFieldsController {
     constructor(private mainPageFieldsService: MainPageFieldsService){}
     @Get()
