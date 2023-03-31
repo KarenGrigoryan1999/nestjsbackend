@@ -4,7 +4,7 @@ import { Roles } from 'src/auth/roles-auth.decorator';
 import { RolesGuard } from 'src/auth/roles.guard';
 import { PromoService } from './promo.service';
 
-@Controller('promo')
+@Controller('api/promo')
 export class PromoController {
     constructor(private promoService: PromoService) {}
 
