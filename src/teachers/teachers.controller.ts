@@ -5,7 +5,7 @@ import {Roles} from "../auth/roles-auth.decorator";
 import {RolesGuard} from "../auth/roles.guard";
 import {updateTeacherDto} from "./dto/update-teacher.dto";
 
-@Controller("teachers")
+@Controller("api/teachers")
 export class TeachersController {
   constructor(private teacherService: TeachersService) {}
 

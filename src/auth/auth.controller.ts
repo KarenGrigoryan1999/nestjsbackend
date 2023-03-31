@@ -17,7 +17,7 @@ import { Roles } from "./roles-auth.decorator";
 import { RolesGuard } from "./roles.guard";
 import { JwtAuthGuard } from "./jwt-auth.guard";
 
-@Controller("auth/auth")
+@Controller("api/auth")
 export class AuthController {
   constructor(private authService: AuthService) {}
 
