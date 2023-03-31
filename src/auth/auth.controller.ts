@@ -17,11 +17,11 @@ import { Roles } from "./roles-auth.decorator";
 import { RolesGuard } from "./roles.guard";
 import { JwtAuthGuard } from "./jwt-auth.guard";
 
-@Controller("/auth")
+@Controller("auth/auth")
 export class AuthController {
   constructor(private authService: AuthService) {}
 
-  @Post("api/login")
+  @Post("/login")
   login(@Body() userDto: LoginUserDto) {
     return this.authService.login(userDto);
   }
