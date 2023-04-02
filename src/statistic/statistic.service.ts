@@ -10,7 +10,7 @@ export class StatisticService {
     constructor(@InjectModel(Statistic) private statisticRepository: typeof Statistic) {}
     
     async addStatistic(dto: StatisticDto) {
-        if(dto === undefined) {
+        if(dto.courseId === undefined) {
             console.log(22222222222222222222);
             const statistic = await this.statisticRepository.findByPk(1);
             await statistic.update({
