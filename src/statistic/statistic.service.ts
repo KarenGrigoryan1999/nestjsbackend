@@ -29,11 +29,6 @@ export class StatisticService {
                     id: dto.courseId
                 }
             }],
-            where: {
-                createdAt: {
-                    [Op.lte]: Sequelize.literal("NOW() - (INTERVAL '1 DAY')")
-                }
-            }
         });
         if(!(statistic && statistic.id !== 1)){
             const newStatistic = await this.statisticRepository.create({
