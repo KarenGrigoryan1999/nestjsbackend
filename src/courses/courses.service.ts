@@ -1,7 +1,8 @@
-import { UserCourses } from './../users/user-courses.model';
-import { LearnStages } from './../learn-stages/learn-stages.model';
 import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
 import { InjectModel } from "@nestjs/sequelize";
+import { Statistic } from './../statistic/static.model';
+import { UserCourses } from './../users/user-courses.model';
+import { LearnStages } from './../learn-stages/learn-stages.model';
 import { LessonsUsers } from './../lessons/lessons-users.model';
 import { Course } from "./courses.model";
 import { CreateCourseDto } from "./dto/create-course.dto";
@@ -18,7 +19,7 @@ export class CoursesService {
   constructor(
     @InjectModel(Course) private coursesRepository: typeof Course,
     @InjectModel(Result) private resultsRepository: typeof Result,
-    @InjectModel(Lesson) private lessonsRepository: typeof Lesson,
+    @InjectModel(Statistic) private statisticRepository: typeof Statistic,
     private fileService: FilesService
   ) {}
 
@@ -97,6 +98,13 @@ export class CoursesService {
     await course.$set("lessons", dto.lessons);
     await course.$set("tests", dto.tests);
 
+    const statistic = await this.statisticRepository.create({
+      users: 0,
+      sales: 0,
+    });
+
+    await statistic.$set('course', course);
+
     return course;
   }
 
@@ -123,7 +131,18 @@ export class CoursesService {
   }
 
   async deleteCourse(id: number) {
-    const candidate = await this.coursesRepository.destroy({ where: { id } });
+    const candidateStatistic = await this.statisticRepository.findOne({
+      include: [
+        {
+          model: Course,
+          where: {
+            id
+          }
+        }
+      ]
+    });
+    const candidate = await this.coursesRepository.destroy({ where: { id }});
+    await candidateStatistic.destroy();
 
     if (candidate)
       return {

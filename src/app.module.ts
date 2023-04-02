@@ -62,6 +62,8 @@ import { StatisticModule } from './statistic/statistic.module';
 import { GiftsModule } from './gifts/gifts.module';
 import { Gifts } from './gifts/gifts.model';
 import { ShopGifts } from './gifts/shop-gifts.model';
+import { Statistic } from './statistic/static.model';
+import { StatisticCourse } from './statistic/statistic-course.model';
 
 @Module({
     imports: [
@@ -115,8 +117,10 @@ import { ShopGifts } from './gifts/shop-gifts.model';
                 Gifts,
                 CompletedLesson,
                 MainPageFields,
+                StatisticCourse,
                 Result,
                 Promo,
+                Statistic,
                 UserResults,
                 ExternalAuth,
             ],

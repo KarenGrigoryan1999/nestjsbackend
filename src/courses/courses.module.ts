@@ -9,10 +9,11 @@ import { LessonsUsers } from "src/lessons/lessons-users.model";
 import { Lesson } from "src/lessons/lessons.model";
 import { User } from "src/users/users.model";
 import { Result } from "src/results/results.model";
+import { Statistic } from "src/statistic/static.model";
 
 @Module({
   controllers: [CoursesController],
   providers: [CoursesService],
-  imports: [AuthModule, SequelizeModule.forFeature([Course, LessonsUsers, Lesson, User, Result]), FilesModule],
+  imports: [AuthModule, SequelizeModule.forFeature([Course, LessonsUsers, Lesson, User, Result, Statistic]), FilesModule],
 })
 export class CoursesModule {}
