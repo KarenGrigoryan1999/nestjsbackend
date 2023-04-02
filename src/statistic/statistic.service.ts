@@ -33,6 +33,7 @@ export class StatisticService {
                 }
             }
         });
+        console.log(statistic, statistic.id);
         if(!(statistic && statistic.id !== 1)){
             const newStatistic = await this.statisticRepository.create({
                 users: 1,
