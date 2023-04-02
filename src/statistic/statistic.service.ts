@@ -31,7 +31,7 @@ export class StatisticService {
             }],
             where: {
                 createdAt: {
-                    [Op.lte]: Sequelize.literal("NOW() - (INTERVAL '1d')")
+                    [Op.lte]: Sequelize.literal("NOW() - (INTERVAL '1 DAY')")
                 }
             }
         });
@@ -57,7 +57,7 @@ export class StatisticService {
         const statistic = await this.statisticRepository.findAll({
             where: {
                 createdAt: {
-                    [Op.gte]: Sequelize.literal('NOW() - INTERVAL "30d"'),
+                    [Op.gte]: Sequelize.literal('NOW() - INTERVAL "30 DAY"'),
                   }
             },
             include: { all: true }
