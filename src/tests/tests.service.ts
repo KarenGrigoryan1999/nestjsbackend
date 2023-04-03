@@ -65,6 +65,8 @@ export class TestsService {
     if (newTest) {
       newTest.$set("questions", test.questions);
     }
+
+    return newTest;
   }
 
   async updateTest(test: UpdateTestDto) {
@@ -84,5 +86,21 @@ export class TestsService {
     }
 
     throw new HttpException("Такой курс не найден", HttpStatus.NOT_FOUND);
+  }
+
+  async deleteTest(id: string) {
+    const candidate = await this.testsRepository.destroy({
+      where: { id: +id },
+    });
+    if (candidate)
+      return {
+        id: +id,
+        deleted: true,
+      };
+
+    throw new HttpException(
+      "Такой тест не найден",
+      HttpStatus.NOT_FOUND
+    );
   }
 }

@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   Param,
   Post,
@@ -52,5 +53,12 @@ export class TestsController {
   @Put()
   updateTest(@Body() test: UpdateTestDto) {
     return this.testsService.updateTest(test);
+  }
+
+  @Roles("ADMIN")
+  @UseGuards(RolesGuard)
+  @Delete("/:id")
+  deleteTest(@Param("id") id: string) {
+    return this.testsService.deleteTest(id);
   }
 }

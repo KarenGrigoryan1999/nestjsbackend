@@ -71,7 +71,7 @@ import { StatisticCourse } from './statistic/statistic-course.model';
             envFilePath: `.${process.env.NODE_ENV}.env`,
         }),
         ServeStaticModule.forRoot({
-            rootPath: path.resolve(__dirname, "static"),
+            rootPath: path.resolve(__dirname, "static", "api"),
         }),
         SequelizeModule.forRoot({
             dialect: "mysql",

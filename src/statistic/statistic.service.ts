@@ -11,7 +11,6 @@ export class StatisticService {
     
     async addStatistic(dto: StatisticDto) {
         if(dto.courseId === undefined) {
-            console.log(22222222222222222222);
             const statistic = await this.statisticRepository.findByPk(1);
             await statistic.update({
                 users: statistic.users + 1
@@ -21,7 +20,6 @@ export class StatisticService {
                 updated: true
             }
         }
-        console.log(111111111111111111111111111111);
         const statistic = await this.statisticRepository.findOne({
             include: [{
                 model: Course,

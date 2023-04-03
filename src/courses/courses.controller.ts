@@ -70,7 +70,7 @@ export class CoursesController {
         @Response({passthrough: true}) res,
         @Param("file") fileName: string
     ): StreamableFile {
-        const filePath = join(process.cwd(), "dist", "static", fileName);
+        const filePath = join(process.cwd(), "dist", "static", "api", fileName);
         const fileStream = createReadStream(filePath);
         const fileMetadata = fileType(fs.readFileSync(filePath));
 

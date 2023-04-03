@@ -32,7 +32,7 @@ export class FilesService {
           const originalFileName = file.originalname.split(".");
           const extension = originalFileName[originalFileName.length - 1];
           const fileName = `${uuid.v4()}.${extension}`;
-          const filePath = path.resolve(__dirname, "..", "static", catalog);
+          const filePath = path.resolve(__dirname, "..", "static", "api", catalog);
           if (!fs.existsSync(filePath)) {
             fs.mkdirSync(filePath, { recursive: true });
           }
