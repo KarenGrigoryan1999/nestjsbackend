@@ -54,6 +54,7 @@ export class StatisticService {
                     [Op.gte]: Sequelize.literal('CURRENT_DATE - INTERVAL 30 DAY'),
                   }
             },
+            order:  [ [ 'users', 'DESC' ]],
             include: { all: true }
         });
 
