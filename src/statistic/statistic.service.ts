@@ -53,17 +53,28 @@ export class StatisticService {
         const statistic = await this.statisticRepository.findAll({
             where: {
                 createdAt: {
-                    [Op.gte]: Sequelize.literal('NOW() - INTERVAL "30 DAY"'),
+                    [Op.gte]: Sequelize.literal('CURRENT_DATE - INTERVAL 30 DAY'),
                   }
             },
+            include: { all: true }
+        });
+
+        const dayStatistic = await this.statisticRepository.findAll({
+            where: {
+                createdAt: {
+                    [Op.gte]: Sequelize.literal('CURRENT_DATE - INTERVAL 1 DAY'),
+                  }
+            },
+            order:  [ [ 'users', 'DESC' ]],
             include: { all: true }
         });
 
         const totalStatistic = await this.statisticRepository.findByPk(1);
 
         return {
-            totalUsers: totalStatistic,
+            totalUsers: totalStatistic.users,
             totalSales: 0,
+            dayStatistic,
             mounthStatistic: statistic.filter((element: Statistic) => element.id !== 1)
         };
     }
