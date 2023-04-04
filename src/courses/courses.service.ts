@@ -20,7 +20,7 @@ export class CoursesService {
     @InjectModel(Course) private coursesRepository: typeof Course,
     @InjectModel(Result) private resultsRepository: typeof Result,
     @InjectModel(Statistic) private statisticRepository: typeof Statistic,
-    private fileService: FilesService
+    @InjectModel(UserCourses) private userCoursesRepository: typeof UserCourses,
   ) {}
 
   async getAllCourses() {
@@ -56,6 +56,15 @@ export class CoursesService {
 
   async getUserCourseInfo(id, userId): Promise<any> {
     const course = await this.getCourse(id);
+
+    const userCourse = await this.userCoursesRepository.findOne({
+      where: {
+          userId,
+          courseId: course.courseId
+      }
+  });
+
+  if(userCourse.pay) course.tests = [];
 
     const finishedLessons = await this.coursesRepository.findByPk(id, {
       include: [

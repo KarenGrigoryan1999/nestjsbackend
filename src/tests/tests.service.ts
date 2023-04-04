@@ -88,6 +88,11 @@ export class TestsService {
     throw new HttpException("Такой курс не найден", HttpStatus.NOT_FOUND);
   }
 
+  async checkTest(test) {
+    console.log(test);
+    return test;
+  }
+
   async deleteTest(id: string) {
     const candidate = await this.testsRepository.destroy({
       where: { id: +id },
