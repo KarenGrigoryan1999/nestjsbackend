@@ -81,6 +81,9 @@ export class AuthService {
       ],
     });
 
+    console.log(candidate);
+    console.log(1212233444444);
+
     if(!candidate) {
       const external = await this.externalAuthRepository.create({
         external_id: externalId,
@@ -93,7 +96,6 @@ export class AuthService {
         password: '',
         activation_code: ''
       });
-      console.log(555555555555555555555555555555555555);
       const role = await this.rolesService.getRoleByValue("STUDENT");
       await newUser.$set("roles", [role.id]);
       await external.$set("user", [newUser.id]);
