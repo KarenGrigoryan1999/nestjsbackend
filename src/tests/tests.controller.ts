@@ -62,7 +62,7 @@ export class TestsController {
     return this.testsService.deleteTest(id);
   }
 
-  @Post()
+  @Put('/check')
   checkTest(@Body() test: any) {
     return this.testsService.checkTest(test);
   }
