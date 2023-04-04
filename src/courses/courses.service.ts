@@ -60,7 +60,7 @@ export class CoursesService {
     const userCourse = await this.userCoursesRepository.findOne({
       where: {
           userId,
-          courseId: course.courseId
+          courseId: id
       }
   });
 
