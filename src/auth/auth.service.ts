@@ -57,14 +57,16 @@ export class AuthService {
         ).toPromise();
       console.log(userInfoRequest.data.response[0].photo_200);
       console.log(request.data);
-      return await this.externalLogin(userInfoRequest.data.response[0], request.data.email || '');
+      return await this.externalLogin(userInfoRequest.data.response[0], '');
     }
   }
 
   private async externalLogin(ExternalUserInfo, email) {
+    console.log(111);
     const externalId = ExternalUserInfo.id;
     const lastName = ExternalUserInfo.last_name;
     const firstName = ExternalUserInfo.first_name;
+    console.log(222);
 
     const candidate = await this.externalAuthRepository.findOne({
       where: {
@@ -81,8 +83,10 @@ export class AuthService {
         }
       ],
     });
+    console.log(333);
 
     if(!candidate) {
+      console.log(444);
       const external = await this.externalAuthRepository.create({
         external_id: externalId,
         auth_method: externalAuthMethods.VK
@@ -94,6 +98,7 @@ export class AuthService {
         password: '',
         activation_code: ''
       });
+      console.log(555);
       const role = await this.rolesService.getRoleByValue("STUDENT");
       await newUser.$set("roles", [role.id]);
       await external.$set("user", [newUser.id]);
