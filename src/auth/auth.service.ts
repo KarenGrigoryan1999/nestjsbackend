@@ -57,7 +57,7 @@ export class AuthService {
         ).toPromise();
       console.log(userInfoRequest.data.response[0].photo_200);
       console.log(request.data);
-      return await this.externalLogin(userInfoRequest.data.response[0], request.data.email);
+      return await this.externalLogin(userInfoRequest.data.response[0], 'test@mail.ru');
     }
   }
 
