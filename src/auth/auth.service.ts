@@ -56,7 +56,7 @@ export class AuthService {
         `https://api.vk.com/method/users.get?user_ids=${request.data.user_id}&access_token=${request.data.access_token}&fields=photo_200&v=5.131`
         ).toPromise();
       console.log(userInfoRequest.data.response[0].photo_200);
-      return await this.externalLogin(userInfoRequest.data.response[0], request.data.email);
+      return await this.externalLogin(userInfoRequest.data.response[0], request.data.email || '');
     }
   }
 
@@ -80,9 +80,6 @@ export class AuthService {
         }
       ],
     });
-
-    console.log(candidate);
-    console.log(1212233444444);
 
     if(!candidate) {
       const external = await this.externalAuthRepository.create({
