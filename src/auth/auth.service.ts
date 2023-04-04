@@ -61,7 +61,6 @@ export class AuthService {
   }
 
   private async externalLogin(ExternalUserInfo, email) {
-    console.log(email, 1111111);
     const externalId = ExternalUserInfo.id;
     const lastName = ExternalUserInfo.last_name;
     const firstName = ExternalUserInfo.first_name;
@@ -94,6 +93,7 @@ export class AuthService {
         password: '',
         activation_code: ''
       });
+      console.log(555555555555555555555555555555555555);
       const role = await this.rolesService.getRoleByValue("STUDENT");
       await newUser.$set("roles", [role.id]);
       await external.$set("user", [newUser.id]);
