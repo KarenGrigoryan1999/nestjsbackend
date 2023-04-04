@@ -56,15 +56,14 @@ export class AuthService {
         `https://api.vk.com/method/users.get?user_ids=${request.data.user_id}&access_token=${request.data.access_token}&fields=photo_200&v=5.131`
         ).toPromise();
       console.log(userInfoRequest.data.response[0].photo_200);
-      console.log(request.data);
-      return await this.externalLogin(userInfoRequest.data.response[0], '');
+      return await this.externalLogin(userInfoRequest.data.response[0], request.data.email || `${userInfoRequest.data.response[0].id}`);
     }
   }
 
   private async externalLogin(ExternalUserInfo, email) {
     const externalId = ExternalUserInfo.id;
-    const lastName = ExternalUserInfo.last_name || '-';
-    const firstName = ExternalUserInfo.first_name || '-';
+    const lastName = ExternalUserInfo.last_name;
+    const firstName = ExternalUserInfo.first_name;
 
     const candidate = await this.externalAuthRepository.findOne({
       where: {
