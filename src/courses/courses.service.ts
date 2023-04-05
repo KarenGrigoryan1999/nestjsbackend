@@ -13,6 +13,7 @@ import { Lesson } from "src/lessons/lessons.model";
 import { CoursesLessons } from "./courses-lessons.model";
 import { User } from "src/users/users.model";
 import { Result } from "src/results/results.model";
+import { Test } from "src/tests/tests.model";
 
 @Injectable()
 export class CoursesService {
@@ -43,7 +44,10 @@ export class CoursesService {
 
   async getCourse(id): Promise<any> {
     const course = await this.coursesRepository.findByPk(id, {
-      include: { all: true, nested: true },
+      include: [{all: true},{
+        model: Test,
+        attributes: { exclude: ['correct_answer'] }
+      }],
     });
 
     if(course){
@@ -54,17 +58,18 @@ export class CoursesService {
     throw new HttpException('', HttpStatus.NOT_FOUND);
   }
 
-  async getUserCourseInfo(id, userId): Promise<any> {
+  async getUserCourseInfo(id, user): Promise<any> {
+    console.log(user.roles[0].value === 'ADMIN');
     const course = await this.getCourse(id);
+    const courseToJson = course.get({plain: true});
 
     const userCourse = await this.userCoursesRepository.findOne({
       where: {
-          userId,
+          userId: user.id,
           courseId: id
-      }
+      },
   });
-
-  if(userCourse.pay) course.tests = [];
+  if(!userCourse.pay && user.roles[0].value !== 'ADMIN') courseToJson.tests = [];
 
     const finishedLessons = await this.coursesRepository.findByPk(id, {
       include: [
@@ -75,7 +80,7 @@ export class CoursesService {
               model: User,
               required: true,
               where: {
-                id: userId
+                id: user.id
               }
             }
           ],
@@ -87,7 +92,7 @@ export class CoursesService {
       include: [{
         model: User,
         where: {
-          id: userId
+          id: user.id
         }
       },
       ]
@@ -95,7 +100,7 @@ export class CoursesService {
 
     const filteredResults = results.reduce((res, element) => [...res, course.tests.reduce((acc, testElement) => testElement.id === element.testId ? true : acc, false) ? element : undefined], []).filter(element => element !== undefined);
 
-    return {...course.get({plain: true}), results: filteredResults, finishedLessons: finishedLessons.lessons.map((element: Lesson) => element.id)};
+    return {...courseToJson, results: filteredResults, finishedLessons: finishedLessons.lessons.map((element: Lesson) => element.id)};
   }
 
   async createCourse(dto: CreateCourseDto) {

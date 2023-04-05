@@ -46,7 +46,7 @@ export class CoursesController {
     @UseGuards(RolesGuard)
     @Get('my/:id')
     getUserCourseInfo(@Request() req, @Param('id') id: number) {
-        return this.coursesService.getUserCourseInfo(id, req.user.id);
+        return this.coursesService.getUserCourseInfo(id, req.user);
     }
 
     @Roles("ADMIN")
