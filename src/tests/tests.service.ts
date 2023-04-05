@@ -93,14 +93,13 @@ export class TestsService {
   }
 
   async checkTest(test) {
-    console.log(test);
     const currentTest = await this.testsRepository.findByPk(test.testId, {include: {all: true, nested: true}});
     let correctPointCount = 0;
 
     for(let i = 0; i < test.questions.length; i++) {
       const selected = test.questions[i][`answer_${test.questions[i].selectAnswer}`] || test.questions[i].selectAnswer;
       if(selected.toLowerCase() === currentTest.questions[i].correct_answer.toLowerCase()) {
-          correctPointCount += test.questions[i].cost;
+          correctPointCount += currentTest.questions[i].cost;
       }
     }
     return {
