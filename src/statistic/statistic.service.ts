@@ -29,7 +29,7 @@ export class StatisticService {
             }],
             order: [ [ 'createdAt', 'DESC' ]],
         });
-        console.log(Date.now() - (new Date(statistic.createdAt)).getTime() < 24*60*60);
+        console.log(Date.now() - (new Date(statistic.createdAt)).getTime());
         console.log('-------------------------------------------------------');
         console.log('-------------------------------------------------------');
         console.log('-------------------------------------------------------');
