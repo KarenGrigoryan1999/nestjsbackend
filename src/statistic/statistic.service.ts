@@ -30,6 +30,11 @@ export class StatisticService {
             order: [ [ 'createdAt', 'DESC' ]],
         });
         console.log(Date.now() - (new Date(statistic.createdAt)).getTime() < 24*60*60);
+        console.log('-------------------------------------------------------');
+        console.log('-------------------------------------------------------');
+        console.log('-------------------------------------------------------');
+        console.log('-------------------------------------------------------');
+        console.log('-------------------------------------------------------');
         if(!(statistic && (Date.now() - (new Date(statistic.createdAt)).getTime() < 24*60*60) && statistic.id !== 1)) {
             const newStatistic = await this.statisticRepository.create({
                 users: 1,
