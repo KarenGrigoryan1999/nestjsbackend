@@ -29,7 +29,7 @@ export class StatisticService {
             }],
             order: [ [ 'createdAt', 'DESC' ]],
         });
-        console.log(statistic.createdAt);
+        console.log(statistic.createdAt, 1212121, 43439439843, 3434);
         if(!(statistic && (new Date(statistic.createdAt)).getSeconds() - Date.now() < 24*60*60 && statistic.id !== 1)){
             const newStatistic = await this.statisticRepository.create({
                 users: 1,
