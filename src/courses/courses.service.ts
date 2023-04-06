@@ -44,7 +44,7 @@ export class CoursesService {
 
   async getCourse(id): Promise<any> {
     const course = await this.coursesRepository.findByPk(id, {
-      include: [{all: true},{
+      include: [{all: true, nested: true},{
         model: Test,
         attributes: { exclude: ['correct_answer'] }
       }],
