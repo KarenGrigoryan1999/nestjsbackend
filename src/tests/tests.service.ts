@@ -23,7 +23,6 @@ export class TestsService {
   async getOneById(id) {
     return await this.testsRepository.findByPk(id, {include: [{
       model: Question,
-      attributes: { exclude: ['correct_answer']}
     }] });
   }
 
