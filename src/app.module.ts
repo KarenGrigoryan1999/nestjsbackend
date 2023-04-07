@@ -1,5 +1,5 @@
-import { ExternalAuth } from './external-auth/external-auth.model';
 import {Module} from "@nestjs/common";
+import { ExternalAuth } from './external-auth/external-auth.model';
 import {SequelizeModule} from "@nestjs/sequelize";
 import {UsersModule} from "./users/users.module";
 import {ConfigModule} from "@nestjs/config";
@@ -58,12 +58,15 @@ import { LearnStagesModule } from './learn-stages/learn-stages.module';
 import { LearnStagesPhotos } from './learn-stages/learn-stages-photos.dto';
 import { PromoModule } from './promo/promo.module';
 import { Promo } from './promo/promo.model';
+import { Payment } from './payments/payments.model';
 import { StatisticModule } from './statistic/statistic.module';
 import { GiftsModule } from './gifts/gifts.module';
 import { Gifts } from './gifts/gifts.model';
 import { ShopGifts } from './gifts/shop-gifts.model';
 import { Statistic } from './statistic/static.model';
 import { StatisticCourse } from './statistic/statistic-course.model';
+import { PaymentsModule } from './payments/payments.module';
+import { PaymentsCourses } from './payments/payments-courses.model';
 
 @Module({
     imports: [
@@ -118,6 +121,8 @@ import { StatisticCourse } from './statistic/statistic-course.model';
                 CompletedLesson,
                 MainPageFields,
                 StatisticCourse,
+                PaymentsCourses,
+                Payment,
                 Result,
                 Promo,
                 Statistic,
@@ -171,6 +176,7 @@ import { StatisticCourse } from './statistic/statistic-course.model';
         PromoModule,
         StatisticModule,
         GiftsModule,
+        PaymentsModule,
     ],
 })
 export class AppModule {

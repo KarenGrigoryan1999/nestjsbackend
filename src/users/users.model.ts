@@ -6,7 +6,6 @@ import {
   DataType,
   Model,
   Table,
-  BelongsTo,
   HasMany,
   ForeignKey,
 } from "sequelize-typescript";
@@ -17,6 +16,7 @@ import { UserCourses } from "./user-courses.model";
 import { File } from "../files/files.model";
 import { UserAvatars } from "src/files/types/user-avatars.model";
 import { Lesson } from 'src/lessons/lessons.model';
+import { Payment } from 'src/payments/payments.model';
 
 interface UserCreationAttrs {
   email: string;
@@ -77,6 +77,9 @@ export class User extends Model<User, UserCreationAttrs> {
 
   @BelongsToMany(() => Lesson, () => LessonsUsers)
   lessons: Lesson[];
+
+  @HasMany(() => Payment)
+  users: Payment[];
 
   @ForeignKey(() => ExternalAuth)
   @Column({ type: DataType.INTEGER, allowNull: true })
