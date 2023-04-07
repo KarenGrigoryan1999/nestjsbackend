@@ -30,8 +30,8 @@ export class TestsController {
   @Roles("ADMIN", "STUDENT")
   @UseGuards(RolesGuard)
   @Get("/:id")
-  getTest(@Param("id") id: string) {
-    return this.testsService.getOneById(id);
+  getTest(@Param("id") id: string, @Request() req) {
+    return this.testsService.getOneById(id, req.user.roles);
   }
 
   @Roles("ADMIN")

@@ -20,10 +20,16 @@ export class TestsService {
     return await this.testsRepository.findAll();
   }
 
-  async getOneById(id) {
-    return await this.testsRepository.findByPk(id, {include: [{
-      model: Question,
-    }] });
+  async getOneById(id, userRoles) {
+    const exclude = userRoles[0].value !== 'ADMIN' ? { attributes: {exclude: ['correct_answer'] }} : {};
+    return await this.testsRepository.findByPk(id, {include: [
+      {
+        all: true,
+        nested: true
+      },{
+        model: Question,
+        ...exclude
+      }] });
   }
 
   async completeTest(dto: CompleteTestDto, userId: number) {
