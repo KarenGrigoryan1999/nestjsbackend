@@ -10,9 +10,13 @@ export class PaymentsController {
 
     @Roles("ADMIN", "STUDENT")
     @UseGuards(RolesGuard)
-    @Redirect()
     @Post()
     async createPayment(@Request() req, @Body() dto: PaymentsDto) {
         return await this.paymentsService.createPayment(dto, req.user.id);
+    }
+
+    @Post('/notification')
+    async notification(){
+        //TODO подтверждение оплаты
     }
 }
