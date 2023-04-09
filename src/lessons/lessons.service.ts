@@ -59,12 +59,12 @@ export class LessonsService {
             include: [{
                 model: Lesson,
                 where: {
-                    position: 2,
+                    position: lesson.position + 1,
                 }
             }],
         });
-
-        if(courseLessons.lessons.length === 0) {
+        console.log(!courseLessons);
+        if(!courseLessons || courseLessons.lessons.length === 0) {
             return {
                 message: 'Course was completed'
             }
