@@ -73,7 +73,7 @@ export class StatisticService {
 
         return {
             totalUsers: totalStatistic.users,
-            totalSales: 0,
+            totalSales: totalStatistic.sales,
             dayStatistic,
             mounthStatistic: statistic.filter((element: Statistic) => element.id !== 1)
         };
