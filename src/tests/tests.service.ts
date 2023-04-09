@@ -7,6 +7,7 @@ import { UpdateTestDto } from "./dto/update-test.dto";
 import { Test } from "./tests.model";
 import { Result } from 'src/results/results.model';
 import { User } from 'src/users/users.model';
+import { File } from 'src/files/files.model';
 
 @Injectable()
 export class TestsService {
@@ -22,13 +23,10 @@ export class TestsService {
 
   async getOneById(id, userRoles) {
     const exclude = userRoles[0].value !== 'ADMIN' ? { attributes: {exclude: ['correct_answer'] }} : {};
-    return await this.testsRepository.findByPk(id, {include: [
-      {
-        all: true,
-        nested: true
-      },{
+    return await this.testsRepository.findByPk(id, {include: [{
         model: Question,
-        ...exclude
+        ...exclude,
+        include: [File]
       }] });
   }
 

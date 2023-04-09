@@ -1,40 +1,55 @@
-import { Course } from './../courses/courses.model';
 import { Injectable } from '@nestjs/common';
-import { v4 as uuidv4 } from 'uuid';
-import { PaymentStatus } from './../shared/entities';
 import { InjectModel } from '@nestjs/sequelize';
+import { HttpService } from '@nestjs/axios';
+import { v4 as uuidv4 } from 'uuid';
+import { StatisticService } from './../statistic/statistic.service';
+import { UserCourses } from './../users/user-courses.model';
+import { Course } from './../courses/courses.model';
+import { PaymentStatus } from './../shared/entities';
 import { PaymentsDto } from './dto/payments.dto';
 import { Payment } from './payments.model';
-import { HttpService } from '@nestjs/axios';
+import { Promo } from 'src/promo/promo.model';
+import { Cart } from 'src/cart/cart.model';
+import { TinkoffResponseDto } from './dto/tinkoff-response-dto';
 
 @Injectable()
 export class PaymentsService {
     constructor(
         @InjectModel(Payment) private paymentRepository: typeof Payment,
         @InjectModel(Course) private courseRepository: typeof Course,
+        @InjectModel(UserCourses) private userCoursesRepository: typeof UserCourses,
+        @InjectModel(Promo) private promoRepository: typeof Promo,
+        @InjectModel(Cart) private cartRepository: typeof Cart,
+        private statisticService: StatisticService,
         private httpService: HttpService,
     ) {
     }
     
     async createPayment(dto: PaymentsDto, userId: number) {
-        const items = [];
+        let price = 0;
         for(let i = 0; i < dto.courses.length; i++) {
             const course = await this.courseRepository.findByPk(dto.courses[i]);
-            items.push({
-                "Name": course.name,
-                "Price": (dto.courses.length > 3 ? course.price : course.sale_price) * 100,
-                "Quantity": 1.00,
-                "Amount": (dto.courses.length > 3 ? course.price : course.sale_price) * 100,
-                "PaymentMethod": "full_prepayment",
-                "PaymentObject": "commodity",
-                "Tax": "vat10",
-                "Ean13": "0123456789"
-            });
+            price += (dto.courses.length > 3 ? course.price : course.sale_price);
         }
+
+        const promo = dto.promo ? await this.promoRepository.findByPk(dto.promo.id): null;
+
+        if(promo) {
+            if(promo.type === 0) {
+                price -= price*promo.discount*0.01;
+                console.log(price);
+            }
+            if(promo.type === 1) {
+                price -= promo.discount;
+            }
+        }
+
+        price = (price < 0 ? 0 : price)*100;
+
         const code = uuidv4();
         const data = {
             "TerminalKey": "TinkoffBankTest",
-            "Amount": items.reduce((acc, element) => acc + element.Price, 0),
+            "Amount": price,
             "OrderId": code,
             "Description": "Оплата курсов Badteachers",
             "NotificationURL": 'http://localhost:7070/api/payment/notification',
@@ -47,15 +62,24 @@ export class PaymentsService {
                 "Phone": "+79031234567",
                 "EmailCompany": "b@test.ru",
                 "Taxation": "osn",
-                "Items": items
-            }
+                "Items": [{
+                    "Name": "Курсы по подготовке к ОГЭ",
+                    "Price": price,
+                    "Quantity": 1.00,
+                    "Amount": price,
+                    "PaymentMethod": "full_prepayment",
+                    "PaymentObject": "commodity",
+                    "Tax": "vat10",
+                    "Ean13": "0123456789"
+                }]
+        }
         };
         const request = await this.httpService.post('https://securepay.tinkoff.ru/v2/Init', data).toPromise();
 
         const payment = await this.paymentRepository.create({
             status: PaymentStatus.WAIT,
             userId,
-            code
+            code: code,
         });
         console.log(request.data.PaymentURL);
         dto.courses.forEach(async (element) => await payment.$set('courses', element))
@@ -63,5 +87,63 @@ export class PaymentsService {
         return {
             url: request.data.PaymentURL,
           }
+    }
+
+    async notification(dto: TinkoffResponseDto) {
+        const payment = await this.paymentRepository.findOne({
+            where: {
+                code: dto.OrderId
+            },
+            include: {all: true, nested: true}
+        });
+        console.log(dto.Status);
+        if(payment && dto.Success && dto.Status === PaymentStatus.CONFIRMED) {
+            // const data = {
+            //     "TerminalKey": "TinkoffBankTest",
+            //     "PaymentId" : "2304882",
+            //     "Token" : "c0ad1dfc4e94ed44715c5ed0e84f8ec439695b9ac219a7a19555a075a3c3ed24"
+            // };
+            // const request = await this.httpService.post('https://securepay.tinkoff.ru/v2/GetState', data).toPromise();
+            // console.log(request);
+
+            payment.courses.forEach(async (courseElement: Course) => {
+                const demoLesson = await this.userCoursesRepository.findOne({
+                    where: {
+                        userId: payment.userId,
+                        courseId: courseElement.id
+                    }
+                });
+
+                if(demoLesson) {
+                    await demoLesson.update({pay: true});
+                }else{
+                    await this.userCoursesRepository.create({
+                        pay: true,
+                        userId: payment.userId,
+                        courseId: courseElement.id,
+                    });
+
+                    await this.cartRepository.destroy({
+                        where: {
+                            userId: payment.userId,
+                            courseId: courseElement.id,
+                        }
+                    });
+                }
+
+                await this.statisticService.addStatistic({
+                    courseId: courseElement.id
+                }, true);
+            });
+            await payment.destroy();
+
+            return {
+                success: true,
+            }
+        }
+
+        return {
+            success: false,
+        }
     }
 }

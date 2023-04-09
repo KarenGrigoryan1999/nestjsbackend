@@ -8,7 +8,8 @@ import { StatisticService } from './statistic.service';
 @Module({
   controllers: [StatisticController],
   providers: [StatisticService],
+  exports: [StatisticService],
   imports: [AuthModule,
-    SequelizeModule.forFeature([Statistic]),]
+    SequelizeModule.forFeature([Statistic])]
 })
 export class StatisticModule {}

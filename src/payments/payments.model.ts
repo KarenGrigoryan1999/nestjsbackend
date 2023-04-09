@@ -10,9 +10,10 @@ import {
 } from "sequelize-typescript";
 import { Course } from "src/courses/courses.model";
 import { User } from 'src/users/users.model';
+import { PaymentStatus } from 'src/shared/entities';
 
 interface PaymentCreationAttrs {
-  status: number,
+  status: PaymentStatus,
   code: string,
   userId: number,
 }
@@ -27,10 +28,10 @@ export class Payment extends Model<Payment, PaymentCreationAttrs> {
   })
   id: number;
 
-  @Column({ type: DataType.INTEGER, allowNull: false })
-  status: string;
+  @Column({ type: DataType.STRING, allowNull: false })
+  status: PaymentStatus;
 
-  @Column({ type: DataType.INTEGER, allowNull: false })
+  @Column({ type: DataType.STRING, allowNull: false })
   code: string;
 
   @ForeignKey(() => User)

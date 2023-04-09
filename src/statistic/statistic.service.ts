@@ -9,7 +9,7 @@ import { StatisticDto } from './dto/statistic.dto';
 export class StatisticService {
     constructor(@InjectModel(Statistic) private statisticRepository: typeof Statistic) {}
     
-    async addStatistic(dto: StatisticDto) {
+    async addStatistic(dto: StatisticDto, saleIncreaseAvailable = false) {
         if(dto.courseId === undefined) {
             const statistic = await this.statisticRepository.findByPk(1);
             await statistic.update({
@@ -31,14 +31,15 @@ export class StatisticService {
         });
         if((statistic && (Date.now() - (new Date(statistic.createdAt)).getTime() > 24*60**1000)) || statistic.id === 1) {
             const newStatistic = await this.statisticRepository.create({
-                users: 1,
-                sales: 0
+                users: saleIncreaseAvailable ? 0 : 1,
+                sales: saleIncreaseAvailable ? 1 : 0,
             });
 
             await newStatistic.$set('course', dto.courseId);
         }else{
             await statistic.update({
-                users: statistic.users + 1
+                users: saleIncreaseAvailable ? statistic.users : statistic.users + 1,
+                sales: saleIncreaseAvailable ? statistic.sales + 1 : statistic.sales,
             });
         }
 

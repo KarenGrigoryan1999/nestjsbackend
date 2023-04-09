@@ -1,4 +1,5 @@
 export enum PaymentStatus {
-    WAIT,
-    COMPLETED
+    WAIT = 'WAIT',
+    COMPLETED = 'COMPLETED',
+    CONFIRMED = 'CONFIRMED',
 }
