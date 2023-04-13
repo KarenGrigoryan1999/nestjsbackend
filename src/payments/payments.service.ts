@@ -5,6 +5,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { StatisticService } from './../statistic/statistic.service';
 import { UserCourses } from './../users/user-courses.model';
 import { Course } from './../courses/courses.model';
+import { XFields } from './../xfields/xfields.model';
 import { PaymentStatus } from './../shared/entities';
 import { PaymentsDto } from './dto/payments.dto';
 import { Payment } from './payments.model';
@@ -20,16 +21,23 @@ export class PaymentsService {
         @InjectModel(UserCourses) private userCoursesRepository: typeof UserCourses,
         @InjectModel(Promo) private promoRepository: typeof Promo,
         @InjectModel(Cart) private cartRepository: typeof Cart,
+        @InjectModel(XFields) private xFieldRepository: typeof XFields,
         private statisticService: StatisticService,
         private httpService: HttpService,
     ) {
     }
     
     async createPayment(dto: PaymentsDto, userId: number) {
+        const sale = await this.xFieldRepository.findOne({
+            where: {
+                code: 'sale',
+            }
+        });
+
         let price = 0;
         for(let i = 0; i < dto.courses.length; i++) {
             const course = await this.courseRepository.findByPk(dto.courses[i]);
-            price += (dto.courses.length > 3 ? course.price : course.sale_price);
+            price += course.price;
         }
 
         const promo = dto.promo ? await this.promoRepository.findByPk(dto.promo.id): null;
@@ -43,6 +51,8 @@ export class PaymentsService {
                 price -= promo.discount;
             }
         }
+
+        price = dto.courses.length > 3 ? price - price*(parseInt(sale.value, 10)*0.01) : price;
 
         price = (price < 0 ? 0 : price)*100;
 

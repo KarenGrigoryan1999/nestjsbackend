@@ -3,6 +3,7 @@ import { SequelizeModule } from '@nestjs/sequelize';
 import { Payment } from './payments.model';
 import { PaymentsController } from './payments.controller';
 import { PaymentsService } from './payments.service';
+import { XFields } from './../xfields/xfields.model';
 import { AuthModule } from 'src/auth/auth.module';
 import { HttpModule } from '@nestjs/axios';
 import { Course } from 'src/courses/courses.model';
@@ -12,7 +13,7 @@ import { StatisticModule } from 'src/statistic/statistic.module';
 import { Cart } from 'src/cart/cart.model';
 
 @Module({
-    imports: [AuthModule, HttpModule, StatisticModule, SequelizeModule.forFeature([Payment, Course, Cart, Promo, UserCourses])],
+    imports: [AuthModule, HttpModule, StatisticModule, SequelizeModule.forFeature([Payment, Course, Cart, Promo, UserCourses, XFields])],
     controllers: [PaymentsController],
     providers: [PaymentsService],
 })
