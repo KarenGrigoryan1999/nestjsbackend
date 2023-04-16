@@ -67,6 +67,8 @@ import { Statistic } from './statistic/static.model';
 import { StatisticCourse } from './statistic/statistic-course.model';
 import { PaymentsModule } from './payments/payments.module';
 import { PaymentsCourses } from './payments/payments-courses.model';
+import { CallsModule } from './calls/calls.module';
+import { Call } from "./calls/calls.model";
 
 @Module({
     imports: [
@@ -96,6 +98,7 @@ import { PaymentsCourses } from './payments/payments-courses.model';
                 Course,
                 TeacherCourses,
                 File,
+                Call,
                 TeacherPhotos,
                 QuestionPhotos,
                 TeacherVideos,
@@ -177,6 +180,7 @@ import { PaymentsCourses } from './payments/payments-courses.model';
         StatisticModule,
         GiftsModule,
         PaymentsModule,
+        CallsModule,
     ],
 })
 export class AppModule {
