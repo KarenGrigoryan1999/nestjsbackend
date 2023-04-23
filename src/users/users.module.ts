@@ -7,11 +7,12 @@ import {Role} from "../roles/roles.model";
 import {UserRoles} from "../roles/user-roles.model";
 import {RolesModule} from "../roles/roles.module";
 import {AuthModule} from "../auth/auth.module";
+import { XFields } from "src/xfields/xfields.model";
 
 @Module({
     controllers: [UsersController],
     providers: [UsersService],
-    imports: [SequelizeModule.forFeature([User, Role, UserRoles]), RolesModule, forwardRef(() => AuthModule)],
+    imports: [SequelizeModule.forFeature([User, Role, UserRoles, XFields]), RolesModule, forwardRef(() => AuthModule)],
     exports: [UsersService],
 })
 export class UsersModule {

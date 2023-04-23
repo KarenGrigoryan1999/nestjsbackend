@@ -7,18 +7,26 @@ import {VerifyResetPasswordDto} from "./dto/verify-reset-password.dto";
 import * as passwordGenerator from "generate-password";
 import * as bcrypt from "bcryptjs";
 import {UpdateUserDto} from "./dto/update-user.dto";
+import { XFields } from "src/xfields/xfields.model";
 
 @Injectable()
 export class UsersService {
     constructor(
         @InjectModel(User) private userRepository: typeof User,
+        @InjectModel(XFields) private xFieldsRepository: typeof XFields,
         private rolesService: RolesService
     ) {
     }
 
     async createUser(dto: CreateUserDto, activation_code: string) {
+        const xFields = await this.xFieldsRepository.findOne({
+            where: {
+                code: 'rewardCount'
+            }
+        });
         const user = await this.userRepository.create({
             ...dto,
+            balance: +xFields.code,
             activation_code,
         });
         const role = await this.rolesService.getRoleByValue("STUDENT");

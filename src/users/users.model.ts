@@ -24,6 +24,7 @@ interface UserCreationAttrs {
   lastName: string;
   password: string;
   activation_code: string;
+  balance?: number;
 }
 
 @Table({ tableName: "users" })
