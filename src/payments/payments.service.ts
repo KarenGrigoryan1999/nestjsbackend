@@ -54,7 +54,7 @@ export class PaymentsService {
 
         price = dto.courses.length >= 3 ? price - price*(parseInt(sale.value, 10)*0.01) : price;
 
-        price = (price < 0 ? 0 : price)*100;
+        price = (price < 0 ? 1 : price)*100;
 
         const code = uuidv4();
         const data = {
