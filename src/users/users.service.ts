@@ -26,7 +26,7 @@ export class UsersService {
         });
         const user = await this.userRepository.create({
             ...dto,
-            balance: +xFields.code,
+            balance: +xFields.value,
             activation_code,
         });
         const role = await this.rolesService.getRoleByValue("STUDENT");
