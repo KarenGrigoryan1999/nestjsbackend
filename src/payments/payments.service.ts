@@ -108,7 +108,8 @@ export class PaymentsService {
             include: {all: true, nested: true}
         });
         console.log(dto.Status);
-        if(!payment && dto.Success && dto.Status !== PaymentStatus.CONFIRMED) {
+        if(payment && !dto.Success && dto.Status !== PaymentStatus.CONFIRMED) {
+            console.log(222222222222222222222222222222);
             // const data = {
             //     "TerminalKey": "TinkoffBankTest",
             //     "PaymentId" : "2304882",
