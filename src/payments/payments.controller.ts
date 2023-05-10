@@ -17,8 +17,15 @@ export class PaymentsController {
     }
 
     @Post('/notification/:code')
-    async notification(@Body() dto: TinkoffResponseDto){
+    async notification(@Param('code') code, @Body() dto: TinkoffResponseDto){
         //TODO подтверждение оплаты
         return await this.paymentsService.notification(dto);
+    }
+
+    @Post('/notification')
+    async notification2(){
+        //TODO подтверждение оплаты
+        console.log('hello 888');
+        return false;
     }
 }

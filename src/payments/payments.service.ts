@@ -58,11 +58,11 @@ export class PaymentsService {
 
         const code = uuidv4();
         const data = {
-            "TerminalKey": "TinkoffBankTest",
+            "TerminalKey": "1647184804609DEMO",
             "Amount": price,
             "OrderId": code,
             "Description": "Оплата курсов Badteachers",
-            "NotificationURL": 'http://localhost:7070/api/payment/notification',
+            "NotificationURL": 'https://badteachers.ru/api/payments/notification',
             "DATA": {
                 "Phone": "+71234567890",
                 "Email": "a@test.com"
@@ -100,6 +100,8 @@ export class PaymentsService {
     }
 
     async notification(dto: TinkoffResponseDto) {
+        console.log('hello 777');
+        console.log(dto);
         const payment = await this.paymentRepository.findOne({
             where: {
                 code: dto.OrderId
