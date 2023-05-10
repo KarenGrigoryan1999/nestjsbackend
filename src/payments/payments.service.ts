@@ -101,7 +101,6 @@ export class PaymentsService {
 
     async notification(dto: TinkoffResponseDto) {
         console.log('hello 777');
-        console.log(dto);
         const payment = await this.paymentRepository.findOne({
             where: {
                 code: dto.OrderId
