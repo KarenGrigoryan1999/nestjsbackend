@@ -60,7 +60,7 @@ export class PaymentsService {
         const data = {
             "TerminalKey": "1647184804609DEMO",
             "Amount": price,
-            "OrderId": code,
+            "OrderId": 200001,
             "Description": "Оплата курсов Badteachers",
             "NotificationURL": 'https://badteachers.ru/api/payments/notification',
             "DATA": {
