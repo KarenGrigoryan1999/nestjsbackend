@@ -100,7 +100,6 @@ export class PaymentsService {
     }
 
     async notification(dto: TinkoffResponseDto) {
-        console.log('hello 777');
         const payment = await this.paymentRepository.findOne({
             where: {
                 code: dto.OrderId
@@ -108,15 +107,14 @@ export class PaymentsService {
             include: {all: true, nested: true}
         });
         console.log(dto.Status);
-        if(payment && !dto.Success && dto.Status !== PaymentStatus.CONFIRMED) {
-            console.log(222222222222222222222222222222);
-            // const data = {
-            //     "TerminalKey": "TinkoffBankTest",
-            //     "PaymentId" : "2304882",
-            //     "Token" : "c0ad1dfc4e94ed44715c5ed0e84f8ec439695b9ac219a7a19555a075a3c3ed24"
-            // };
-            // const request = await this.httpService.post('https://securepay.tinkoff.ru/v2/GetState', data).toPromise();
-            // console.log(request);
+        if(payment && dto.Success && dto.Status !== PaymentStatus.REJECTED) {
+            const data = {
+                 "TerminalKey": "1647184804609DEMO",
+                 "PaymentId" : dto.PaymentId,
+                 "Token" : dto.Token
+             };
+             const request = await this.httpService.post('https://securepay.tinkoff.ru/v2/GetState', data).toPromise();
+             console.log(request);
 
             payment.courses.forEach(async (courseElement: Course) => {
                 const demoLesson = await this.userCoursesRepository.findOne({
