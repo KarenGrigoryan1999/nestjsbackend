@@ -1,7 +1,8 @@
 export class TinkoffResponseDto {
-    OrderId: string;
+    OrderId: number;
     Success: boolean;
     Status: string;
     Token: string;
     PaymentId: string;
+    Amount: number;
 }

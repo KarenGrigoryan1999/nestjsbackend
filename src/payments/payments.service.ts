@@ -1,3 +1,4 @@
+import crypto from 'crypto';
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 import { HttpService } from '@nestjs/axios';
@@ -111,8 +112,9 @@ export class PaymentsService {
             const data = {
                  "TerminalKey": "1647184804609DEMO",
                  "PaymentId" : dto.PaymentId,
-                 "Token" : dto.Token
+                 "Token" : this.signToken(dto.Amount, dto.OrderId),
              };
+             console.log('hash', this.signToken(dto.Amount, dto.OrderId));
              const request = await this.httpService.post('https://securepay.tinkoff.ru/v2/GetState', data).toPromise();
              console.log('111',request.data);
              if(request.data.Status !== PaymentStatus.CONFIRMED) {
@@ -158,5 +160,15 @@ export class PaymentsService {
         return {
             success: false,
         }
+    }
+
+    private signToken(amount: number, orderId: number) {
+        const description = "Оплата курсов Badteachers";
+        const password = "ibmjsy62s3j45iph";
+        const terminalKey = "1647184804609DEMO";
+        const concat = amount + description + orderId + password + terminalKey;
+        const hash = crypto.createHash('sha256');
+        hash.write(concat);
+        return hash.digest('hex');
     }
 }
