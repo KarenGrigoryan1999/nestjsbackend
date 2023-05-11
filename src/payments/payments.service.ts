@@ -106,7 +106,7 @@ export class PaymentsService {
             },
             include: {all: true, nested: true}
         });
-        console.log(dto.Status);
+        console.log(dto);
         if(payment && dto.Success && dto.Status !== PaymentStatus.REJECTED) {
             const data = {
                  "TerminalKey": "1647184804609DEMO",
