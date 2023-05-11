@@ -165,7 +165,7 @@ export class PaymentsService {
         const description = "Оплата курсов Badteachers";
         const password = "ibmjsy62s3j45iph";
         const terminalKey = "1647184804609DEMO";
-        const concat = amount + description + orderId + password + terminalKey;
+        const concat = amount + description.replace(/ /g,'') + orderId + password + terminalKey;
         const { createHash } = require('crypto');
         return createHash('sha256').update(concat).digest('hex');
     }
