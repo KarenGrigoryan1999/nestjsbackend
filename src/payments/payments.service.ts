@@ -114,6 +114,7 @@ export class PaymentsService {
                  "Token" : dto.Token
              };
              const request = await this.httpService.post('https://securepay.tinkoff.ru/v2/GetState', data).toPromise();
+             console.log('111',request.data);
              if(request.data.Status !== PaymentStatus.CONFIRMED) {
                 throw Error('payment rejected');
              }
