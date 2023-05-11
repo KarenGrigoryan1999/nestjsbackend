@@ -19,9 +19,6 @@ export class PaymentsController {
 
     @Post('/notification')
     async notification(@Body() dto: TinkoffResponseDto){
-        //TODO подтверждение оплаты
-        inspect(dto);
-        console.log(1111111111111111111111111111111111111111111111111111111)
         return await this.paymentsService.notification(dto);
     }
 }
