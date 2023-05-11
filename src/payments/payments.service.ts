@@ -114,7 +114,9 @@ export class PaymentsService {
              };
              const request = await this.httpService.post('https://securepay.tinkoff.ru/v2/GetState', data).toPromise();
              if(request.data.Status !== PaymentStatus.CONFIRMED) {
-                throw new HttpException('payment rejected', HttpStatus.PAYMENT_REQUIRED);
+                return {
+                    confirmed: false,
+                }
              }
 
             payment.courses.forEach(async (courseElement: Course) => {

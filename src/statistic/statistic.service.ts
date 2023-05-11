@@ -29,7 +29,9 @@ export class StatisticService {
             }],
             order: [ [ 'createdAt', 'DESC' ]],
         });
-        if(!statistic) throw new HttpException('statistic was not found', HttpStatus.NOT_FOUND);
+        if(!statistic) return {
+            updated: false,
+        };
         if(((Date.now() - (new Date(statistic.createdAt)).getTime() > 24*60*60*1000) || statistic.id === 1)) {
             const newStatistic = await this.statisticRepository.create({
                 users: saleIncreaseAvailable ? 0 : 1,
