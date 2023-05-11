@@ -2,7 +2,6 @@ import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 import { HttpService } from '@nestjs/axios';
 import { v4 as uuidv4 } from 'uuid';
-import sha256 from 'sha256';
 import { StatisticService } from './../statistic/statistic.service';
 import { UserCourses } from './../users/user-courses.model';
 import { Course } from './../courses/courses.model';
@@ -167,6 +166,7 @@ export class PaymentsService {
         const password = "ibmjsy62s3j45iph";
         const terminalKey = "1647184804609DEMO";
         const concat = amount + description + orderId + password + terminalKey;
-        return sha256(concat);
+        const { createHash } = require('crypto');
+        return createHash('sha256').update(concat).digest('hex');
     }
 }
