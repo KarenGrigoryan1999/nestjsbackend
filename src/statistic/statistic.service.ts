@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { Op, Sequelize } from 'sequelize';
 import { Course } from './../courses/courses.model';
 import { Statistic } from 'src/statistic/static.model';
@@ -29,7 +29,8 @@ export class StatisticService {
             }],
             order: [ [ 'createdAt', 'DESC' ]],
         });
-        if(statistic && ((Date.now() - (new Date(statistic.createdAt)).getTime() > 24*60*60*1000) || statistic.id === 1)) {
+        if(!statistic) throw new HttpException('statistic was not found', HttpStatus.NOT_FOUND);
+        if(((Date.now() - (new Date(statistic.createdAt)).getTime() > 24*60*60*1000) || statistic.id === 1)) {
             const newStatistic = await this.statisticRepository.create({
                 users: saleIncreaseAvailable ? 0 : 1,
                 sales: saleIncreaseAvailable ? 1 : 0,

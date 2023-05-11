@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 import { HttpService } from '@nestjs/axios';
 import { v4 as uuidv4 } from 'uuid';
@@ -106,18 +106,15 @@ export class PaymentsService {
             },
             include: {all: true, nested: true}
         });
-        console.log(dto);
         if(payment && dto.Success && dto.Status !== PaymentStatus.REJECTED) {
             const data = {
                  "TerminalKey": "1647184804609DEMO",
                  "PaymentId" : dto.PaymentId,
                  "Token" : this.signToken(dto.PaymentId),
              };
-             console.log('hash', this.signToken(dto.PaymentId));
              const request = await this.httpService.post('https://securepay.tinkoff.ru/v2/GetState', data).toPromise();
-             console.log('111',request.data);
              if(request.data.Status !== PaymentStatus.CONFIRMED) {
-                throw Error('payment rejected');
+                throw new HttpException('payment rejected', HttpStatus.PAYMENT_REQUIRED);
              }
 
             payment.courses.forEach(async (courseElement: Course) => {
@@ -162,7 +159,6 @@ export class PaymentsService {
     }
 
     private signToken(paymentId: string) {
-        const description = "Оплата курсов Badteachers";
         const password = "ibmjsy62s3j45iph";
         const terminalKey = "1647184804609DEMO";
         const concat = password + paymentId + terminalKey;
