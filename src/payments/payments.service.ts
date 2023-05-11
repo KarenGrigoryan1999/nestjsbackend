@@ -111,9 +111,9 @@ export class PaymentsService {
             const data = {
                  "TerminalKey": "1647184804609DEMO",
                  "PaymentId" : dto.PaymentId,
-                 "Token" : this.signToken(dto.Amount, dto.OrderId),
+                 "Token" : this.signToken(dto.PaymentId),
              };
-             console.log('hash', this.signToken(dto.Amount, dto.OrderId));
+             console.log('hash', this.signToken(dto.PaymentId));
              const request = await this.httpService.post('https://securepay.tinkoff.ru/v2/GetState', data).toPromise();
              console.log('111',request.data);
              if(request.data.Status !== PaymentStatus.CONFIRMED) {
@@ -161,11 +161,11 @@ export class PaymentsService {
         }
     }
 
-    private signToken(amount: number, orderId: number) {
+    private signToken(paymentId: string) {
         const description = "Оплата курсов Badteachers";
         const password = "ibmjsy62s3j45iph";
         const terminalKey = "1647184804609DEMO";
-        const concat = amount + description.replace(/ /g,'') + orderId + password + terminalKey;
+        const concat = password + paymentId + terminalKey;
         const { createHash } = require('crypto');
         return createHash('sha256').update(concat).digest('hex');
     }
