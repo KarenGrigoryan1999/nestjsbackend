@@ -114,7 +114,7 @@ export class PaymentsService {
                  "Token" : dto.Token
              };
              const request = await this.httpService.post('https://securepay.tinkoff.ru/v2/GetState', data).toPromise();
-             console.log(request);
+             console.log(request.data);
 
             payment.courses.forEach(async (courseElement: Course) => {
                 const demoLesson = await this.userCoursesRepository.findOne({
