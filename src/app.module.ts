@@ -136,7 +136,15 @@ import { Call } from "./calls/calls.model";
             synchronize: true,
         }),
         MailerModule.forRoot({
-            transport: 'smtp.mail.ru',
+            transport: {
+                host: 'smtp.mail.ru',
+                port: '465',
+                secure: true,
+                auth: {
+                    user: 'grigoryan_k99@inbox.ru',
+                    pass: 'zaq12wsx'
+                }
+            },
             defaults: {
                 from: process.env.SMTP_FROM,
             },
