@@ -161,6 +161,7 @@ export class AuthService {
       await candidate.update({
         email_reset_code: resetCode,
       });
+      console.log(3333333333333333333333333333333333333333333333);
       return await this.mailerService.sendMail({
         to: candidate.email,
         from: process.env.SMTP_FROM,
