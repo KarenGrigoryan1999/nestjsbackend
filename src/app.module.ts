@@ -140,7 +140,7 @@ import { Call } from "./calls/calls.model";
                 service: 'gmail',
                 auth: {
                     user: 'grigorankaren07@gmail.com',
-                    pass: '.Kintouri99'
+                    pass: '.Kintouri'
                 }
             },
             defaults: {
