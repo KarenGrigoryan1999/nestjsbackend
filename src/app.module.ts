@@ -136,7 +136,7 @@ import { Call } from "./calls/calls.model";
             synchronize: true,
         }),
         MailerModule.forRoot({
-            transport: process.env.SMTP,
+            transport: 'smtp.mail.ru',
             defaults: {
                 from: process.env.SMTP_FROM,
             },
