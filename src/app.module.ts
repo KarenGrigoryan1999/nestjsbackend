@@ -137,12 +137,12 @@ import { Call } from "./calls/calls.model";
         }),
         MailerModule.forRoot({
             transport: {
-                host: 'smtp.mail.ru',
-                port: '465',
-                secure: true,
+                host: 'smtp.gmail.com',
+                port: 587,
+                secure: false,
                 auth: {
-                    user: 'grigoryan_k99@inbox.ru',
-                    pass: 'zaq12wsx'
+                    user: 'grigorankaren07@gmail.com',
+                    pass: '.Kintouri99'
                 }
             },
             defaults: {
