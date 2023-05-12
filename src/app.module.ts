@@ -137,9 +137,7 @@ import { Call } from "./calls/calls.model";
         }),
         MailerModule.forRoot({
             transport: {
-                host: 'smtp.gmail.com',
-                port: 587,
-                secure: false,
+                service: 'gmail',
                 auth: {
                     user: 'grigorankaren07@gmail.com',
                     pass: '.Kintouri99'
