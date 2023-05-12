@@ -162,7 +162,7 @@ export class AuthService {
         email_reset_code: resetCode,
       });
       console.log(3333333333333333333333333333333333333333333333);
-      return await this.mailerService.sendMail({
+      const response =  await this.mailerService.sendMail({
         to: candidate.email,
         from: process.env.SMTP_FROM,
         subject: "Восстановление забытого пароля",
@@ -172,6 +172,8 @@ export class AuthService {
           link: `${process.env.RESET_PASSWORD_DOMAIN}/?email=${candidate.email}&reset-code=${resetCode}`,
         },
       });
+      console.log(response);
+      return response;
     }
     throw new HttpException(
       "Пользователь с таким email не существует",
