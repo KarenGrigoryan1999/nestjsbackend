@@ -76,7 +76,7 @@ import { Call } from "./calls/calls.model";
             envFilePath: `.${process.env.NODE_ENV}.env`,
         }),
         ServeStaticModule.forRoot({
-            rootPath: path.resolve(__dirname, "static"),
+            rootPath: path.resolve(__dirname, '..', "static"),
         }),
         SequelizeModule.forRoot({
             dialect: "mysql",
@@ -136,13 +136,7 @@ import { Call } from "./calls/calls.model";
             synchronize: true,
         }),
         MailerModule.forRoot({
-            transport: {
-                service: 'gmail',
-                auth: {
-                    user: 'grigorankaren07@gmail.com',
-                    pass: '.Kintouri'
-                }
-            },
+            transport: process.env.SMTP,
             defaults: {
                 from: process.env.SMTP_FROM,
             },
