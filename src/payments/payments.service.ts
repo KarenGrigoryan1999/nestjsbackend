@@ -108,7 +108,7 @@ export class PaymentsService {
         });
         if(payment && dto.Success && dto.Status !== PaymentStatus.REJECTED) {
             const data = {
-                 "TerminalKey": "1647184804609DEMO",
+                 "TerminalKey": process.env.TINKOFF_TERMINAL,
                  "PaymentId" : dto.PaymentId,
                  "Token" : this.signToken(dto.PaymentId),
              };
@@ -161,8 +161,8 @@ export class PaymentsService {
     }
 
     private signToken(paymentId: string) {
-        const password = "ibmjsy62s3j45iph";
-        const terminalKey = "1647184804609DEMO";
+        const password = process.env.TINKOFF_PASSWORD;
+        const terminalKey = process.env.TINKOFF_TERMINAL;
         const concat = password + paymentId + terminalKey;
         const { createHash } = require('crypto');
         return createHash('sha256').update(concat).digest('hex');
