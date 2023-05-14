@@ -9,6 +9,7 @@ import {
     boysSpotTitle: string;
     boysSpotText: string;
     boysSpotButtonTitle: string;
+    boysSpotButtonLink: string;
     purpureSpotTitle: string;
     purpureSpotText: string;
     turquoiseSpotTitle: string;
@@ -32,6 +33,9 @@ import {
 
     @Column({ type: DataType.TEXT })
     boysSpotButtonTitle: string;
+
+    @Column({ type: DataType.TEXT })
+    boysSpotButtonLink: string;
 
     @Column({ type: DataType.TEXT })
     purpureSpotTitle: string;

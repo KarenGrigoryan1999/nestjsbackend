@@ -8,6 +8,8 @@ import { IsEmpty, IsNotEmpty } from "class-validator";
     @IsNotEmpty()
     boysSpotButtonTitle: string;
     @IsNotEmpty()
+    boysSpotButtonLink: string;
+    @IsNotEmpty()
     purpureSpotTitle: string;
     @IsNotEmpty()
     purpureSpotText: string;
