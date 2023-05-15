@@ -86,14 +86,6 @@ export class AuthService {
         external_id: externalId,
         auth_method: externalAuthMethods.VK
       });
-      console.log({
-        email,
-        lastName,
-        name: firstName,
-        password: '',
-        activation_code: ''
-      });
-      try{
       const newUser = await this.userRepository.create({
         email,
         lastName,
@@ -106,9 +98,6 @@ export class AuthService {
       await external.$set("user", [newUser.id]);
       newUser.roles = [role];
       return newUser;
-    } catch(e){
-      console.log(e);
-    }
     }else{
       return candidate.user;
     }
