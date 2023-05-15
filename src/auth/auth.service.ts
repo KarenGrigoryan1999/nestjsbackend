@@ -93,6 +93,7 @@ export class AuthService {
         password: '',
         activation_code: ''
       });
+      try{
       const newUser = await this.userRepository.create({
         email,
         lastName,
@@ -105,6 +106,9 @@ export class AuthService {
       await external.$set("user", [newUser.id]);
       newUser.roles = [role];
       return newUser;
+    } catch(e){
+      console.log(e);
+    }
     }else{
       return candidate.user;
     }
