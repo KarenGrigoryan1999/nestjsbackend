@@ -8,6 +8,7 @@ import {JwtModule} from "@nestjs/jwt";
 import { SequelizeModule } from "@nestjs/sequelize";
 import { ExternalAuth } from "src/external-auth/external-auth.model";
 import { User } from "src/users/users.model";
+import { XFields } from 'src/xfields/xfields.model';
 
 @Module({
     controllers: [AuthController],
@@ -22,7 +23,7 @@ import { User } from "src/users/users.model";
         }),
         forwardRef(() => RolesModule),
         HttpModule,
-        SequelizeModule.forFeature([ExternalAuth, User])
+        SequelizeModule.forFeature([ExternalAuth, User, XFields])
     ],
     exports: [AuthService, JwtModule],
 })
