@@ -76,6 +76,21 @@ export class UsersService {
         return user;
     }
 
+    async confirmEmail(code: string) {
+        const user = await this.userRepository.findOne({
+            where: {activation_code: code},
+        });
+        if (user) {
+            await user.update({
+                activation_code: '',
+                email_confirmed: true,
+            });
+            return {
+                activated: true,
+            };
+        }
+        throw new HttpException("Произошла ошибка", HttpStatus.BAD_REQUEST);
+    }
 
     async updateUser(dto: UpdateUserDto) {
         const user = await this.userRepository.findByPk(dto.id);

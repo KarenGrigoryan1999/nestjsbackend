@@ -136,7 +136,15 @@ import { Call } from "./calls/calls.model";
             synchronize: true,
         }),
         MailerModule.forRoot({
-            transport: process.env.SMTP,
+            transport: {
+                pool: true,
+                host: process.env.SMTP_HOST,
+                port: process.env.SMTP_PORT,
+                auth: {
+                    user: process.env.SMTP_USER, 
+                    pass: process.env.SMTP_PASSWORD
+                }
+            },
             defaults: {
                 from: process.env.SMTP_FROM,
             },

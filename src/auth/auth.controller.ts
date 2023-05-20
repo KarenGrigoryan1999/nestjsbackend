@@ -48,6 +48,11 @@ export class AuthController {
     return this.authService.sendResetEmail(userDto);
   }
 
+  @Get('/activation/:code')
+  confirmEmail(@Param('code') code: string) {
+    return this.authService.confirmEmail(code);
+  }
+
   @Get("/reset-password/:email/:code")
   resetPassword(@Param() userDto: VerifyResetPasswordDto) {
     return this.authService.resetPassword(userDto);

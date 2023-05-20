@@ -21,6 +21,7 @@ import * as md5 from "md5";
 import { InjectModel } from '@nestjs/sequelize';
 import { externalAuthMethods } from 'src/external-auth/interfaces/external-auth-type.interface';
 import { RolesService } from 'src/roles/roles.service';
+import { XFields } from 'src/xfields/xfields.model';
 
 @Injectable()
 export class AuthService {
@@ -31,6 +32,7 @@ export class AuthService {
     private mailerService: MailerService,
     private httpService: HttpService,
     @InjectModel(ExternalAuth) private externalAuthRepository: typeof ExternalAuth,
+    @InjectModel(XFields) private xFieldsRepository: typeof XFields,
     @InjectModel(User) private userRepository: typeof User
   ) {}
 
@@ -82,6 +84,11 @@ export class AuthService {
     });
 
     if(!candidate) {
+      const xFields = await this.xFieldsRepository.findOne({
+        where: {
+            code: 'rewardCount'
+        }
+      });
       const external = await this.externalAuthRepository.create({
         external_id: externalId,
         auth_method: externalAuthMethods.VK
@@ -91,8 +98,10 @@ export class AuthService {
         lastName,
         name: firstName,
         password: '',
-        activation_code: ''
+        activation_code: '',
+        balance: +xFields.value,
       });
+
       const role = await this.rolesService.getRoleByValue("STUDENT");
       await newUser.$set("roles", [role.id]);
       await external.$set("user", [newUser.id]);
@@ -129,7 +138,7 @@ export class AuthService {
       ...userDto,
       password: hashPassword,
     }, activationCode);
-    //this.sendConfirmEmail(user);
+    this.sendConfirmEmail(user);
     return this.generateToken(user);
   }
 
@@ -141,10 +150,10 @@ export class AuthService {
         to: candidate.email,
         from: process.env.SMTP_FROM,
         subject: "Подтверждение почты",
-        template: `reset-password`,
+        template: `activate-mail`,
         context: {
           name: candidate.name,
-          link: `${process.env.RESET_PASSWORD_DOMAIN}/activation/${activateCode}`,
+          link: `${process.env.RESET_PASSWORD_DOMAIN}/?activation=${activateCode}`,
         },
       });
     }
@@ -161,7 +170,6 @@ export class AuthService {
       await candidate.update({
         email_reset_code: resetCode,
       });
-      console.log(3333333333333333333333333333333333333333333333);
       const response = await this.mailerService.sendMail({
         to: candidate.email,
         from: process.env.SMTP_FROM,
@@ -172,8 +180,6 @@ export class AuthService {
           link: `${process.env.RESET_PASSWORD_DOMAIN}/?email=${candidate.email}&reset-code=${resetCode}`,
         },
       });
-      console.log(22222222222222);
-      console.log(response);
       return response;
     }
     throw new HttpException(
@@ -198,8 +204,12 @@ export class AuthService {
     }
   }
 
+  async confirmEmail(code: string) {
+    await this.userService.confirmEmail(code);
+    return "Ваша почта успешно подтверждена!";
+  }
+
   async generateToken(user: User) {
-    console.log(user);
     const payload = { email: user.email, id: user.id, roles: user.roles };
     return {
       roles: user.roles,
