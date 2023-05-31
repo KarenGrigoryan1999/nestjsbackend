@@ -58,19 +58,19 @@ export class PaymentsService {
 
         const code = uuidv4();
         const data = {
-            "TerminalKey": "1647184804609DEMO",
+            "TerminalKey": process.env.TINKOFF_TERMINAL,
             "Amount": price,
             "OrderId": code,
             "Description": "Оплата курсов Badteachers",
             "NotificationURL": 'https://badteachers.ru/api/payments/notification',
             "DATA": {
-                "Phone": "+71234567890",
-                "Email": "a@test.com"
+                "Phone": "",
+                "Email": ""
             },
             "Receipt": {
-                "Email": "a@test.ru",
-                "Phone": "+79031234567",
-                "EmailCompany": "b@test.ru",
+                "Email": "",
+                "Phone": "",
+                "EmailCompany": "",
                 "Taxation": "osn",
                 "Items": [{
                     "Name": "Курсы по подготовке к ОГЭ",
