@@ -223,6 +223,9 @@ export class AuthService {
     }
     const user = await this.userService.getUserByEmail(userDto.email);
     if (user) {
+      if(user.activation_code) {
+        throw new HttpException('Пожалуйста, подтверди свой email', HttpStatus.FORBIDDEN);
+      }
       const passwordEquals = await bcrypt.compare(
         userDto.password,
         user?.password
