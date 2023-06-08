@@ -10,6 +10,14 @@ import { IsEmpty, IsNotEmpty } from "class-validator";
     @IsNotEmpty()
     boysSpotButtonLink: string;
     @IsNotEmpty()
+    boysRedSpotTitle: string;
+    @IsNotEmpty()
+    boysRedSpotText: string;
+    @IsNotEmpty()
+    boysRedSpotButtonTitle: string;
+    @IsNotEmpty()
+    boysRedSpotButtonLink: string;
+    @IsNotEmpty()
     purpureSpotTitle: string;
     @IsNotEmpty()
     purpureSpotText: string;
