@@ -24,11 +24,16 @@ export class FilesService {
   ) {}
 
   async createFile(inputFiles, catalog: string, isPrivate = false) {
+    console.log(1);
     const { files } = inputFiles;
     let outputFiles = { id: 0 };
+    console.log(2);
     try {
+      console.log(3);
       if (files) {
+        console.log(4);
         for (const file of files) {
+          console.log(5);
           const originalFileName = file.originalname.split(".");
           const extension = originalFileName[originalFileName.length - 1];
           const fileName = `${uuid.v4()}.${extension}`;
@@ -36,9 +41,8 @@ export class FilesService {
           if (!fs.existsSync(filePath)) {
             fs.mkdirSync(filePath, { recursive: true });
           }
-          fs.writeFile(path.join(filePath, fileName), file.buffer, () => {
-            
-          });
+          fs.writeFileSync(path.join(filePath, fileName), file.buffer);
+          console.log(6);
 
           const savedFile = await this.filesRepository.create({
             name: fileName,
