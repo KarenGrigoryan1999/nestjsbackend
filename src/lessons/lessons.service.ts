@@ -212,7 +212,7 @@ export class LessonsService {
                     if(pastLessonIsPassed) break;
                 }
 
-                if(!pastLessonIsPassed) throw new HttpException("Вы не прошли предыдущий урок", HttpStatus.FORBIDDEN);
+                if(!pastLessonIsPassed && !lesson.free) throw new HttpException("Вы не прошли предыдущий урок", HttpStatus.FORBIDDEN);
             }
 
             console.log('first payed lesson');
