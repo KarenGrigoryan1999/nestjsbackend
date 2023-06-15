@@ -10,6 +10,10 @@ import {
     boysSpotText: string;
     boysSpotButtonTitle: string;
     boysSpotButtonLink: string;
+    boysRedSpotTitle: string;
+    boysRedSpotText: string;
+    boysRedSpotButtonTitle: string;
+    boysRedSpotButtonLink: string;
     purpureSpotTitle: string;
     purpureSpotText: string;
     turquoiseSpotTitle: string;
@@ -36,6 +40,18 @@ import {
 
     @Column({ type: DataType.TEXT })
     boysSpotButtonLink: string;
+
+    @Column({ type: DataType.TEXT })
+    boysRedSpotTitle: string;
+
+    @Column({ type: DataType.TEXT })
+    boysRedSpotText: string;
+
+    @Column({ type: DataType.TEXT })
+    boysRedSpotButtonTitle: string;
+
+    @Column({ type: DataType.TEXT })
+    boysRedSpotButtonLink: string;
 
     @Column({ type: DataType.TEXT })
     purpureSpotTitle: string;
