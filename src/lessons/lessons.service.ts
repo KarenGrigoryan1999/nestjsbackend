@@ -69,7 +69,27 @@ export class LessonsService {
         const lesson = await this.lessonsRepository.findByPk(id, {
             include: [Course]
         });
-        lesson.$set("user", userId);
+        if(lesson.free) {
+            const coursePrevLessons = await this.courseRepository.findByPk(lesson.courses[0].id, {
+                include: [{
+                    model: Lesson,
+                    include: [{
+                        model: User,
+                        where: {
+                            id: userId
+                        }
+                    }],
+                    where: {
+                        position: lesson.position - 1,
+                    },
+                }],
+            });
+            if(coursePrevLessons && ((coursePrevLessons.lessons || lesson.position - 1 <= 1) || (coursePrevLessons.lessons && coursePrevLessons.lessons[0].user && coursePrevLessons.lessons[0].user.length > 0))) {
+                lesson.$set("user", userId);
+            }
+        } else {
+            lesson.$set("user", userId);
+        }
         const courseLessons = await this.courseRepository.findByPk(lesson.courses[0].id, {
             include: [{
                 model: Lesson,
@@ -78,7 +98,7 @@ export class LessonsService {
                 }
             }],
         });
-        console.log(!courseLessons);
+
         if(!courseLessons || courseLessons.lessons.length === 0) {
             return {
                 message: 'Course was completed'
