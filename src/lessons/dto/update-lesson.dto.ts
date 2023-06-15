@@ -15,4 +15,6 @@ export class UpdateLessonDto {
 
     @IsNumber({}, { message: "Не переданы уроки" })
     readonly questionId: number;
+
+    readonly free?: boolean;
 }

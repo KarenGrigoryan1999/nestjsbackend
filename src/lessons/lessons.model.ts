@@ -21,7 +21,10 @@ export class Lesson extends Model<Lesson, LessonCreationAttrs> {
     name: string;
 
     @Column({ type: DataType.INTEGER })
-    position: number;    
+    position: number; 
+    
+    @Column({ type: DataType.BOOLEAN, defaultValue: false })
+    free: boolean; 
     
     @BelongsToMany(() => File, () => LessonsVideos)
     video: File[]

@@ -11,6 +11,7 @@ import {Question} from "../questions/question.model";
 import {File} from "../files/files.model";
 import {CompletedLesson} from "../completed-lessons/completed-lessons.model";
 import { User } from 'src/users/users.model';
+import { inspect } from 'util';
 
 @Injectable()
 export class LessonsService {
@@ -37,7 +38,21 @@ export class LessonsService {
     }
 
     async updateLesson(dto: UpdateLessonDto) {
-        const lesson = await this.lessonsRepository.findByPk(dto.id);
+        const lesson = await this.lessonsRepository.findByPk(dto.id, {
+            include: Course
+        });
+
+        if(dto.free) {
+            const courseId = lesson.courses[0].id;
+            const lessonCourse = await this.courseRepository.findByPk(courseId, {
+                include: Lesson
+            });
+            for(let i = 0; i < lessonCourse.lessons.length; i++) {
+                await lessonCourse.lessons[i].update({
+                    free: false,
+                });
+            }
+        }
 
         if (lesson.id) {
             await lesson.update(dto);
@@ -152,8 +167,9 @@ export class LessonsService {
             throw new HttpException("Вы не покупали данный курс", HttpStatus.FORBIDDEN);
         }
 
-        // Если курс взят как пробный - то открываем доступ только для первого урока
-        if (!userCourse.pay && lesson.position === 1) {
+        // Если курс взят как пробный - то открываем доступ только для курса, помеченного как пробный
+        console.log(lesson.free)
+        if (!userCourse.pay && lesson.free) {
             return lesson;
         }
 
