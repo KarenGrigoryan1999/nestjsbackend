@@ -41,7 +41,7 @@ export class FilesService {
           if (!fs.existsSync(filePath)) {
             fs.mkdirSync(filePath, { recursive: true });
           }
-          fs.writeFileSync(path.join(filePath, fileName), file.buffer);
+          //fs.writeFileSync(path.join(filePath, fileName), file.buffer);
           console.log(6);
 
           const savedFile = await this.filesRepository.create({
