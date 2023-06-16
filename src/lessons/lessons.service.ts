@@ -11,6 +11,7 @@ import {Question} from "../questions/question.model";
 import {File} from "../files/files.model";
 import {CompletedLesson} from "../completed-lessons/completed-lessons.model";
 import { User } from 'src/users/users.model';
+import { inspect } from 'util';
 
 @Injectable()
 export class LessonsService {
@@ -37,7 +38,21 @@ export class LessonsService {
     }
 
     async updateLesson(dto: UpdateLessonDto) {
-        const lesson = await this.lessonsRepository.findByPk(dto.id);
+        const lesson = await this.lessonsRepository.findByPk(dto.id, {
+            include: Course
+        });
+
+        if(dto.free) {
+            const courseId = lesson.courses[0].id;
+            const lessonCourse = await this.courseRepository.findByPk(courseId, {
+                include: Lesson
+            });
+            for(let i = 0; i < lessonCourse.lessons.length; i++) {
+                await lessonCourse.lessons[i].update({
+                    free: false,
+                });
+            }
+        }
 
         if (lesson.id) {
             await lesson.update(dto);
@@ -54,7 +69,27 @@ export class LessonsService {
         const lesson = await this.lessonsRepository.findByPk(id, {
             include: [Course]
         });
-        lesson.$set("user", userId);
+        if(lesson.free) {
+            const coursePrevLessons = await this.courseRepository.findByPk(lesson.courses[0].id, {
+                include: [{
+                    model: Lesson,
+                    include: [{
+                        model: User,
+                        where: {
+                            id: userId
+                        }
+                    }],
+                    where: {
+                        position: lesson.position - 1,
+                    },
+                }],
+            });
+            if(coursePrevLessons && ((coursePrevLessons.lessons || lesson.position - 1 <= 1) || (coursePrevLessons.lessons && coursePrevLessons.lessons[0].user && coursePrevLessons.lessons[0].user.length > 0))) {
+                lesson.$set("user", userId);
+            }
+        } else {
+            lesson.$set("user", userId);
+        }
         const courseLessons = await this.courseRepository.findByPk(lesson.courses[0].id, {
             include: [{
                 model: Lesson,
@@ -63,7 +98,7 @@ export class LessonsService {
                 }
             }],
         });
-        console.log(!courseLessons);
+
         if(!courseLessons || courseLessons.lessons.length === 0) {
             return {
                 message: 'Course was completed'
@@ -152,8 +187,9 @@ export class LessonsService {
             throw new HttpException("Вы не покупали данный курс", HttpStatus.FORBIDDEN);
         }
 
-        // Если курс взят как пробный - то открываем доступ только для первого урока
-        if (!userCourse.pay && lesson.position === 1) {
+        // Если курс взят как пробный - то открываем доступ только для курса, помеченного как пробный
+        console.log(lesson.free)
+        if (!userCourse.pay && lesson.free) {
             return lesson;
         }
 
@@ -176,7 +212,7 @@ export class LessonsService {
                     if(pastLessonIsPassed) break;
                 }
 
-                if(!pastLessonIsPassed) throw new HttpException("Вы не прошли предыдущий урок", HttpStatus.FORBIDDEN);
+                if(!pastLessonIsPassed && !lesson.free) throw new HttpException("Вы не прошли предыдущий урок", HttpStatus.FORBIDDEN);
             }
 
             console.log('first payed lesson');

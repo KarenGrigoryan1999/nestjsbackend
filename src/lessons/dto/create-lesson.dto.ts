@@ -15,4 +15,6 @@ export class CreateLessonDto {
 
     @IsString({ message: "Не передан id курса" })
     readonly  courseId: string;
+
+    readonly free?: boolean;
 }
