@@ -30,6 +30,7 @@ export class LessonsService {
 
         if (lesson.id) {
             await lesson.$set("video", dto.video);
+            await lesson.$set("courses", dto.courseId);
             await lesson.$set("question", dto.questionId);
             return lesson;
         }
