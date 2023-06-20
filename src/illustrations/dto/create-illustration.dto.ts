@@ -1,9 +1,9 @@
-import { IsString } from "class-validator";
+import { IsNumber } from "class-validator";
 
 export class CreateIllustrationDto {
     @IsString({message: "Введите имя"})
     readonly name: string;
 
-    @IsString()
+    @IsNumber()
     readonly photo: number;
 }
