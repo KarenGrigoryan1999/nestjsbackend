@@ -11,7 +11,7 @@ export class IllustrationsController {
   @Roles("ADMIN")
   @UseGuards(RolesGuard)
   @Post()
-  createCourse(@Body() dto: CreateIllustrationDto) {
+  create(@Body() dto: CreateIllustrationDto) {
       return this.illustrationsService.create(dto);
   }
 
