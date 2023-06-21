@@ -34,6 +34,9 @@ export class IllustrationsService {
   }
 
   async remove(id: number) {
-    return await this.illustrationsRepository.destroy({where: {id}});
+    await this.illustrationsRepository.destroy({where: {id}});
+    return {
+      deleted: true,
+    }
   }
 }
