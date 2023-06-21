@@ -20,6 +20,15 @@ export class IllustrationsService {
     return await this.illustrationsRepository.findAll();
   }
 
+  async getByType(type) {
+    return await this.illustrationsRepository.findOne({
+      where: {
+        name: type
+      },
+      include: [File]
+    });
+  }
+
   async findOne(id: number) {
     return await this.illustrationsRepository.findByPk(id, {
       include: [File]

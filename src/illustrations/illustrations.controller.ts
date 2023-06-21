@@ -31,6 +31,13 @@ export class IllustrationsController {
 
   @Roles("ADMIN")
   @UseGuards(RolesGuard)
+  @Get('type/:type')
+  async findByType(@Param('type') type: string) {
+    return await this.illustrationsService.getByType(type);
+  }
+
+  @Roles("ADMIN")
+  @UseGuards(RolesGuard)
   @Put(':id')
   update(@Param('id') id: string, @Body() dto: CreateIllustrationDto) {
     return this.illustrationsService.update(+id, dto);
