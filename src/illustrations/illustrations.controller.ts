@@ -29,7 +29,6 @@ export class IllustrationsController {
     return this.illustrationsService.findOne(+id);
   }
 
-  @Roles("ADMIN")
   @UseGuards(RolesGuard)
   @Get('type/:type')
   async findByType(@Param('type') type: string) {
