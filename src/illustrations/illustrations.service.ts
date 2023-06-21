@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 import { CreateIllustrationDto } from './dto/create-illustration.dto';
 import { Illustrations } from './illustrations.model';
+import { File } from "../files/files.model";
 
 @Injectable()
 export class IllustrationsService {
@@ -20,7 +21,9 @@ export class IllustrationsService {
   }
 
   async findOne(id: number) {
-    return await this.illustrationsRepository.findByPk(id);
+    return await this.illustrationsRepository.findByPk(id, {
+      include: [File]
+    });
   }
 
   async update(id: number, dto: CreateIllustrationDto) {
