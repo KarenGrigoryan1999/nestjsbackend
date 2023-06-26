@@ -4,7 +4,7 @@ export class EditQuestionDto {
   @IsNumber({}, { message: "Не передан id вопроса" })
   id: number;
 
-  @Length(5, 100, { message: "Вопрос не может быть короче 5 символов" })
+  @Length(5, 1000, { message: "Вопрос не может быть короче 5 и больше 1000 символов" })
   readonly question;
 
   @IsString({ message: "Выберите тип вопроса" })
