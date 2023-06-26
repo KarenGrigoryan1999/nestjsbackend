@@ -49,6 +49,7 @@ export class CoursesService {
         attributes: { exclude: ['correct_answer'] }
       }],
     });
+    console.log(course);
 
     if(course){
       course.lessons.sort((a, b) => a.position - b.position);

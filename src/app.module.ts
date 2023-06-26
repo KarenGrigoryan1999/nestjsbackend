@@ -69,6 +69,9 @@ import { PaymentsModule } from './payments/payments.module';
 import { PaymentsCourses } from './payments/payments-courses.model';
 import { CallsModule } from './calls/calls.module';
 import { Call } from "./calls/calls.model";
+import { IllustrationsModule } from './illustrations/illustrations.module';
+import { IllustrationsPhotos } from "./files/types/illustrations-files.model";
+import { Illustrations } from "./illustrations/illustrations.model";
 
 @Module({
     imports: [
@@ -125,6 +128,8 @@ import { Call } from "./calls/calls.model";
                 MainPageFields,
                 StatisticCourse,
                 PaymentsCourses,
+                Illustrations,
+                IllustrationsPhotos,
                 Payment,
                 Result,
                 Promo,
@@ -189,6 +194,7 @@ import { Call } from "./calls/calls.model";
         GiftsModule,
         PaymentsModule,
         CallsModule,
+        IllustrationsModule,
     ],
 })
 export class AppModule {
