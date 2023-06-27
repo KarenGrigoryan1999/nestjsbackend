@@ -13,6 +13,7 @@ import {
   Param,
 } from "@nestjs/common";
 import { FilesService } from "./files.service";
+import { diskStorage } from "multer";
 
 @Controller("api/files")
 export class FilesController {
@@ -40,6 +41,32 @@ export class FilesController {
     }
 
     return this.filesService.createFile(f, catalog, isPrivateFile);
+  }
+
+  @Roles("ADMIN")
+  @UseGuards(RolesGuard)
+  @Post('lesson')
+  @UseInterceptors(FileFieldsInterceptor([{ name: "files", maxCount: 1 }], {
+    storage: diskStorage({
+    destination: (req, file, callback) => {
+      let path = `./`;
+      callback(null, path);
+    },
+    filename: (req, file, callback) => {
+      //originalname is the uploaded file's name with extn
+      callback(null, file.originalname);
+    }
+  }), limits: {fileSize: 500000000000}}))
+  saveLesson(
+    @Body("catalog") catalog: string,
+    @Body("private") isPrivate: string,
+    @UploadedFiles()
+    f: {
+      files?: Express.Multer.File[];
+    }
+  ) {
+
+    return this.filesService.createLessonFile(f.files[0].originalname, catalog);
   }
 
   @Get("/:video")

@@ -23,6 +23,42 @@ export class FilesService {
     @InjectS3() private readonly s3: S3
   ) {}
 
+  async createLessonFile(inputFiles, catalog: string) {
+    console.log(1);
+    let outputFiles = { id: 0 };
+    console.log(2);
+    try {
+          const file = fs.readFileSync('./'+inputFiles);
+          const extension = 'mp4';
+          const fileName = `${uuid.v4()}.${extension}`;
+          const filePath = path.resolve(__dirname, "..", "..", "static", "api", catalog);
+          if (!fs.existsSync(filePath)) {
+            fs.mkdirSync(filePath, { recursive: true });
+          }
+          fs.writeFileSync(path.join(filePath, fileName), file);
+          fs.unlinkSync('./'+inputFiles);
+          console.log(6);
+
+          const savedFile = await this.filesRepository.create({
+            name: fileName,
+            catalog: catalog,
+            is_private: false,
+          });
+
+          if (savedFile.id) {
+            outputFiles = savedFile;
+          }
+
+        return outputFiles;
+    } catch (e) {
+      console.log(e);
+      throw new HttpException(
+        "Ошибка при записи файла",
+        HttpStatus.INTERNAL_SERVER_ERROR
+      );
+    }
+  }
+
   async createFile(inputFiles, catalog: string, isPrivate = false) {
     console.log(1);
     const { files } = inputFiles;
