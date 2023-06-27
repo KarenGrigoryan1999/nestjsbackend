@@ -21,7 +21,7 @@ export class FilesController {
   @Roles("ADMIN")
   @UseGuards(RolesGuard)
   @Post()
-  @UseInterceptors(FileFieldsInterceptor([{ name: "files", maxCount: 3 }], {dest: './temp', limits: {fileSize: 500000000000}}))
+  @UseInterceptors(FileFieldsInterceptor([{ name: "files", maxCount: 3 }], {limits: {fileSize: 500000000000}}))
   saveFile(
     @Body("catalog") catalog: string,
     @Body("private") isPrivate: string,
