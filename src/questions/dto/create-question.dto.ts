@@ -1,7 +1,7 @@
 import { IsString, Length } from "class-validator";
 
 export class CreateQuestionDto {
-  @Length(5, 100, { message: "Вопрос не может быть короче 5 символов" })
+  @Length(5, 1000, { message: "Вопрос не может быть короче 5 и больше 1000 символов" })
   readonly question;
 
   @IsString({ message: "Выберите тип вопроса" })
