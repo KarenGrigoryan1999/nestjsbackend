@@ -46,7 +46,17 @@ export class FilesController {
   @Roles("ADMIN")
   @UseGuards(RolesGuard)
   @Post('lesson')
-  @UseInterceptors(FileFieldsInterceptor([{ name: "files", maxCount: 1 }], {dest: './', limits: {fileSize: 500000000000}}))
+  @UseInterceptors(FileFieldsInterceptor([{ name: "files", maxCount: 1 }], {
+    storage: diskStorage({
+    destination: (req, file, callback) => {
+      let path = `./`;
+      callback(null, path);
+    },
+    filename: (req, file, callback) => {
+      //originalname is the uploaded file's name with extn
+      callback(null, file.originalname);
+    }
+  }), limits: {fileSize: 500000000000}}))
   saveLesson(
     @Body("catalog") catalog: string,
     @Body("private") isPrivate: string,
