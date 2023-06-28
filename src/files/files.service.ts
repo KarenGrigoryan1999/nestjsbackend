@@ -28,15 +28,13 @@ export class FilesService {
     let outputFiles = { id: 0 };
     console.log(2);
     try {
-          const file = fs.readFileSync('./'+inputFiles);
           const extension = 'mp4';
           const fileName = `${uuid.v4()}.${extension}`;
           const filePath = path.resolve(__dirname, "..", "..", "static", "api", catalog);
           if (!fs.existsSync(filePath)) {
             fs.mkdirSync(filePath, { recursive: true });
           }
-          fs.writeFileSync(path.join(filePath, fileName), file);
-          fs.unlinkSync('./'+inputFiles);
+          fs.renameSync('./'+inputFiles, path.join(filePath, fileName));
           console.log(6);
 
           const savedFile = await this.filesRepository.create({
