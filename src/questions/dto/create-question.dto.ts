@@ -14,7 +14,7 @@ export class CreateQuestionDto {
 
   readonly photos: any[];
 
-  @Length(1, 1000, { message: "Введите верный ответ" })
+  @Length(1, 2000, { message: "Введите верный ответ" })
   readonly correct_answer;
 
   readonly position;
