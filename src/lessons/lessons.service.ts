@@ -11,7 +11,6 @@ import {Question} from "../questions/question.model";
 import {File} from "../files/files.model";
 import {CompletedLesson} from "../completed-lessons/completed-lessons.model";
 import { User } from 'src/users/users.model';
-import { inspect } from 'util';
 
 @Injectable()
 export class LessonsService {
@@ -189,7 +188,6 @@ export class LessonsService {
         }
 
         // Если курс взят как пробный - то открываем доступ только для курса, помеченного как пробный
-        console.log(lesson.free)
         if (!userCourse.pay && lesson.free) {
             return lesson;
         }
@@ -216,7 +214,6 @@ export class LessonsService {
                 if(!pastLessonIsPassed && !lesson.free) throw new HttpException("Вы не прошли предыдущий урок", HttpStatus.FORBIDDEN);
             }
 
-            console.log('first payed lesson');
             return lesson;
         }
 

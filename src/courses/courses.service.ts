@@ -42,15 +42,13 @@ export class CoursesService {
     });
   }
 
-  async getCourse(id): Promise<any> {
+  async getCourse(id): Promise<any> {//
     const course = await this.coursesRepository.findByPk(id, {
       include: [{all: true, nested: true},{
         model: Test,
         attributes: { exclude: ['correct_answer'] }
       }],
     });
-    console.log(course);
-
     if(course){
       course.lessons.sort((a, b) => a.position - b.position);
       return course;
@@ -60,7 +58,6 @@ export class CoursesService {
   }
 
   async getUserCourseInfo(id, user): Promise<any> {
-    console.log(user.roles[0].value === 'ADMIN');
     const course = await this.getCourse(id);
     const courseToJson = course.get({plain: true});
 
@@ -70,7 +67,11 @@ export class CoursesService {
           courseId: id
       },
   });
-  if(!userCourse.pay && user.roles[0].value !== 'ADMIN') courseToJson.tests = [];
+  let isActivated = true;
+  if(!userCourse.pay && user.roles[0].value !== 'ADMIN') {
+    courseToJson.tests = [];
+    isActivated = false;
+  }
 
     const finishedLessons = await this.coursesRepository.findByPk(id, {
       include: [
@@ -101,7 +102,7 @@ export class CoursesService {
 
     const filteredResults = results.reduce((res, element) => [...res, course.tests.reduce((acc, testElement) => testElement.id === element.testId ? true : acc, false) ? element : undefined], []).filter(element => element !== undefined);
 
-    return {...courseToJson, results: filteredResults, finishedLessons: finishedLessons.lessons.map((element: Lesson) => element.id)};
+    return {...courseToJson, results: filteredResults, finishedLessons: finishedLessons.lessons.map((element: Lesson) => element.id), isActivated };
   }
 
   async createCourse(dto: CreateCourseDto) {
