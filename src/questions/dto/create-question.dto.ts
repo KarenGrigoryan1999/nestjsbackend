@@ -11,6 +11,7 @@ export class CreateQuestionDto {
   readonly answer_2;
   readonly answer_3;
   readonly answer_4;
+  readonly answer_5;
 
   readonly photos: any[];
 

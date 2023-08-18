@@ -9,6 +9,7 @@ interface QuestionCreationAttrs {
     answer_2: string;
     answer_3: string;
     answer_4: string;
+    answer_5: string;
     correct_answer: string;
     cost: string;
     type: string;
@@ -42,6 +43,9 @@ export class Question extends Model<Question, QuestionCreationAttrs> {
 
     @Column({type: DataType.STRING})
     answer_4: string;
+
+    @Column({type: DataType.STRING})
+    answer_5: string;
 
     @Column({type: DataType.STRING})
     correct_answer: string;
