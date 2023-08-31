@@ -19,7 +19,7 @@ export class QuestionsService {
     async editQuestion(dto: EditQuestionDto) {
         const question = await this.questionsRepository.findByPk(dto.id);
 
-        await this.questionsRepository.update(dto, { where: { id: dto.id }});
+        await question.update(dto);
 
         await question.$set("photos", dto.photos);
 
