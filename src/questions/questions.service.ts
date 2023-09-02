@@ -1,3 +1,5 @@
+import { HttpStatus } from '@nestjs/common';
+import { HttpException } from '@nestjs/common';
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 import { CreateQuestionDto } from './dto/create-question.dto';
@@ -7,7 +9,7 @@ import { Question } from './question.model';
 @Injectable()
 export class QuestionsService {
     constructor(@InjectModel(Question) private questionsRepository: typeof Question) { }
-    
+
     async createQuestion(dto: CreateQuestionDto) {
         const question = await this.questionsRepository.create(dto);
 
@@ -15,7 +17,7 @@ export class QuestionsService {
 
         return question;
     }
-        
+
     async editQuestion(dto: EditQuestionDto) {
         const question = await this.questionsRepository.findByPk(dto.id);
 
@@ -26,5 +28,18 @@ export class QuestionsService {
         return {
             success: true
         };
+    }
+
+    async deleteQuestion(id) {
+        const question = await this.questionsRepository.findByPk(id);
+        if (question) {
+            await question.destroy();
+
+            return {
+                deleted: true,
+            }
+        } else {
+            throw new HttpException("Вопрос с таким id не найден", HttpStatus.NOT_FOUND);
+        }
     }
 }

@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post, Put, UseGuards } from "@nestjs/common";
+import { Body, Controller, Delete, Post, Put, UseGuards, Param } from "@nestjs/common";
 import { Roles } from "src/auth/roles-auth.decorator";
 import { RolesGuard } from "src/auth/roles.guard";
 import { CreateQuestionDto } from "./dto/create-question.dto";
@@ -21,5 +21,12 @@ export class QuestionsController {
   @Put()
   editQuestion(@Body() dto: EditQuestionDto) {
     return this.questionService.editQuestion(dto);
+  }
+
+  @Roles("ADMIN")
+  @UseGuards(RolesGuard)
+  @Delete()
+  deleteQuestion(@Param('id') id) {
+    return this.questionService.deleteQuestion(id);
   }
 }
