@@ -25,7 +25,7 @@ export class QuestionsController {
 
   @Roles("ADMIN")
   @UseGuards(RolesGuard)
-  @Delete()
+  @Delete('/:id')
   deleteQuestion(@Param('id') id) {
     return this.questionService.deleteQuestion(id);
   }
